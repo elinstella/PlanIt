@@ -2,8 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import authRoutes from "./routes/authRoutes";
-import { router as userRoutes } from "./routes/userRoutes";
+import authRoutes from "./routes/user/authRoutes";
+import { router as userRoutes } from "./routes/user/userRoutes";
+import { emailRoutes } from "./routes/task/emailRoutes";
+
 
 dotenv.config();
 
@@ -17,7 +19,8 @@ app.use(express.json());
 // Routes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes); // Använd default import här
-
+// Använd rätt route för API-anrop
+app.use("/api", emailRoutes); // Detta gör att `/api/send-email` fungerar
 // Starta servern
 mongoose
   .connect(MONGO_URI)

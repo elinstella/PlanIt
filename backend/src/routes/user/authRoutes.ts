@@ -1,8 +1,8 @@
 import express from "express";
-import { registerUser } from "../controllers/registerController";
-import { loginUser } from "../controllers/loginController";
+import { registerUser } from "../../controllers/user/registerController";
+import { loginUser } from "../../controllers/user/loginController";
 import { body } from "express-validator";
-import { getUserProfile } from "../controllers/userController";
+import { getUserProfile } from "../../controllers/user/userController";
 
 
 const router = express.Router();

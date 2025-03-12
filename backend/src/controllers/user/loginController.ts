@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { User } from "../models/User";
+import { User } from "../../models/user/User";
 import bcrypt from "bcryptjs";
 import { validationResult } from "express-validator";
-import { createToken } from "../services/authService";
+import { createToken } from "../../services/user/authService";
 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req);

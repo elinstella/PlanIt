@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import EmailSender from "../components/api/send-email";
 
 const Home = () => {
   return (
@@ -10,6 +11,7 @@ const Home = () => {
       <Link to="/about" className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
         Om oss
       </Link>
+      <EmailSender />
     </div>
   );
 };
