@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { User } from "../../models/user/User";
+import User from "../../models/user/User";
 
 // Utöka Request-typen för att inkludera userId
 interface AuthRequest extends Request {
