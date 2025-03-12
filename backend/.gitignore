@@ -1,0 +1,20 @@
+# Ignorera node_modules och byggfiler
+node_modules/
+dist/
+build/
+
+# Ignorera miljövariabler
+.env
+
+# Ignorera loggfiler
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Ignorera OS-specifika filer
+.DS_Store
+Thumbs.db
+
+# Ignorera TypeScript-kompilerade filer (om du bygger projektet)
+*.js
+*.js.map
