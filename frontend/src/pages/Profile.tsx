@@ -24,22 +24,46 @@ const Profile: React.FC = () => {
 
   const token = localStorage.getItem("token");
 
+
+  
   // ✅ Hämta användarinfo vid sidladdning
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!token) {
+        console.error("❌ Inget token hittades i localStorage!");
+        return;
+      }
+  
+      console.log("🔹 Token som skickas:", token);
+  
       try {
-        const response = await fetch("/api/auth/me", {
+        const response = await fetch("http://localhost:5000/api/auth/me", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
+  
+        console.log("🔹 Response status:", response.status);
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("❌ Misslyckades hämta user data:", errorData);
+          return;
+        }
+  
         const data = await response.json();
-        if (response.ok) setName(data.name);
-      } catch {
-        console.error("Failed to fetch user data");
+        console.log("✅ User data:", data);
+  
+        setName(data.name);
+      } catch (error) {
+        console.error("❌ Fetch error:", error);
       }
     };
+  
     fetchUserData();
   }, [token]);
+  
+
+
 
   // ✅ Uppdatera namn
   const handleUpdateName = async () => {
@@ -66,6 +90,8 @@ const Profile: React.FC = () => {
       setErrors((prev) => ({ ...prev, name: "An error occurred while updating name." }));
     }
   };
+
+
 
   // ✅ Uppdatera e-post
   const handleUpdateEmail = async () => {

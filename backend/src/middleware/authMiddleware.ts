@@ -1,31 +1,51 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface AuthenticatedRequest extends Request {
-  user?: any; // Replace `any` with a specific user type if needed
+  user?: { id: string };
 }
 
-const authMiddleware = async (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const token = req.header("Authorization");
+const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+  console.log("Request Headers:", req.headers);
 
-    if (!token) {
-      res.status(401).json({ message: "Access denied. No token provided." });
-      return; // Ensure function exits after sending response
+  const authHeader = req.header("Authorization");
+  if (!authHeader) {
+    console.log("❌ No Authorization header found!");
+    res.status(401).json({ message: "No token, authorization denied" });
+    return;
+  }
+
+  console.log("✅ Found Authorization header:", authHeader);
+
+  const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+  if (!token) {
+    console.log("❌ Token is missing after Bearer!");
+    res.status(401).json({ message: "Invalid token format" });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    console.log("✅ Decoded Token:", decoded); // ✅ Logga vad vi får!
+
+    if (!decoded || typeof decoded === "string") {
+      console.log("❌ Token is invalid");
+      res.status(401).json({ message: "Invalid token" });
+      return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    req.user = decoded; // Attach decoded user data to the request
+    if (!decoded.userId) {
+      console.log("❌ Token saknar userId!", decoded);
+      res.status(401).json({ message: "Invalid token data" });
+      return;
+    }
 
+    req.user = { id: decoded.userId };
     next();
-  } catch (err) {
-    res.status(400).json({ message: "Invalid token." });
-    return; // Exit function to satisfy TypeScript
+  } catch (error) {
+    console.log("❌ Token verification failed!", error);
+    res.status(401).json({ message: "Invalid token" });
   }
 };
 
-export default authMiddleware;
+export { authMiddleware };

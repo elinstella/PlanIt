@@ -8,30 +8,26 @@ import { Document } from "mongoose";
 // Define the extended user document type
 type UserDocument = Document & IUser;
 
-// Här använder vi Promise<void> som returtyp
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ errors: errors.array() });
-    return;
-  }
-
   const { name, email, password } = req.body;
 
   try {
-    let user = await User.findOne({ email }) as UserDocument | null;
-    if (user) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
       res.status(400).json({ message: "E-post används redan" });
       return;
     }
 
+    console.log("🔹 Hashar lösenordet...");
     const hashedPassword = await bcrypt.hash(password, 10);
-    user = new User({ name, email, password: hashedPassword }) as UserDocument;
+    console.log("✅ Hashat lösenord:", hashedPassword);
+
+    const user = new User({ name, email, password: hashedPassword });
     await user.save();
 
-    const token = createToken(user._id.toString()); // ✅ No more 'unknown' error
+    const token = createToken(user._id.toString());
     res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ message: "Serverfel" });
+    res.status(500).json({ message: "Serverfel vid registrering" });
   }
 };

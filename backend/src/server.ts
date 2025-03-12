@@ -24,6 +24,8 @@ app.use("/user", userRoutes); // Använd default import här
 app.use("/api", emailRoutes); // Detta gör att `/api/send-email` fungerar
 // Starta servern
 app.use("/api/user", userRoutes); // Viktig koppling!
+app.use("/api/auth", authRoutes); // 👈 Här läggs `/api/` till
+
 
 mongoose
   .connect(MONGO_URI)

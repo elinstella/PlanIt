@@ -14,20 +14,7 @@ interface IUser extends Document {
 const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
-
-// Hash password before saving
-UserSchema.pre<IUser>("save", async function (next: (err?: Error) => void) {
-  if (!this.isModified("password")) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error as Error);
-  }
+  password: { type: String, required: true }, // ❌ Ingen hashing här!
 });
 
 // Add a method to compare passwords
