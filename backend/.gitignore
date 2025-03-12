@@ -18,3 +18,8 @@ Thumbs.db
 # Ignorera TypeScript-kompilerade filer (om du bygger projektet)
 *.js
 *.js.map
+
+# Ignorera node_modules i backend och frontend
+node_modules/
+backend/node_modules/
+frontend/node_modules/
