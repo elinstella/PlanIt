@@ -1,3 +1,59 @@
 @import "tailwindcss";
 
 
+/* Anpassade färger */
+@layer utilities {
+  .bg-background {
+    background-color: #1C213E; /* Djup Mörkblå */
+  }
+  
+  .bg-dark-purple {
+    background-color: #44325A; /* Mörklila */
+  }
+
+  .bg-primary {
+    background-color: #704A9F; /* Klarare Lila */
+  }
+
+  .bg-lavender {
+    background-color: #A78BC4; /* Mild Lavendel */
+  }
+
+  .bg-warm-brown {
+    background-color: #C58B6A; /* Dämpad Gyllene Brun */
+  }
+
+  .bg-warm-ocre {
+    background-color: #E0A878; /* Mjuk Ockra */
+  }
+
+  .bg-soft-beige {
+    background-color: #F6E9E0; /* Ljus Beige (Text & UI) */
+  }
+
+  /* Textfärger */
+  .text-background {
+    color: #1C213E;
+  }
+
+  .text-dark-purple {
+    color: #44325A;
+  }
+
+  .text-primary {
+    color: #704A9F;
+  }
+
+  .text-soft-beige {
+    color: #F6E9E0;
+  }
+
+  /* Hover-effekter */
+  .hover\:bg-lavender:hover {
+    background-color: #A78BC4;
+  }
+
+  .hover\:bg-warm-brown:hover {
+    background-color: #C58B6A;
+  }
+}

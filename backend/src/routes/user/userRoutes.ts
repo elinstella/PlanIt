@@ -1,10 +1,21 @@
 import express from "express";
-import { getUserProfile } from "../../controllers/user/userController";
-import authMiddleware from "../../middleware/authMiddleware";
+import { authMiddleware } from "../../middleware/authMiddleware";
+import { getUserProfile, getUserEmail } from "../../controllers/user/userController";
+import { updateEmail } from "../../controllers/user/updateEmailController";
 
 const router = express.Router();
 
-// Skydda denna route med authMiddleware
+// Skydda dessa routes med authMiddleware
 router.get("/profile", authMiddleware, getUserProfile);
+router.get("/email", authMiddleware, getUserEmail);
 
-export { router }; // Named export
+// Lägg till async handler och använd res direkt för att undvika Promise<Response>
+router.put("/update-email", authMiddleware, async (req, res) => {
+  try {
+    await updateEmail(req, res); // Vänta på att updateEmail ska slutföras
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+export { router };

@@ -10,22 +10,24 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
+  
     const res = await fetch("http://localhost:5000/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-
+  
     const data = await res.json();
     if (!res.ok) {
       setError(data.message || "Inloggning misslyckades");
       return;
     }
-
+  
+    console.log("Token mottagen vid inloggning:", data.token); // Debug-logga token
     localStorage.setItem("token", data.token);
     navigate("/profile");
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">

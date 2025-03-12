@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import EmailSender from "../components/api/send-email";
+import Button from "../components/UI/Button";
 
 const Home = () => {
   return (
@@ -12,6 +13,19 @@ const Home = () => {
         Om oss
       </Link>
       <EmailSender />
+      <div className="flex flex-col space-y-3">
+      <div className="flex flex-col space-y-3">
+  <Button variant="login">Login</Button>
+  <Button variant="register">Register</Button>
+  <Button variant="logout">Logout</Button>
+  <Button variant="delete">Delete</Button>
+  <Button variant="confirm">Confirm</Button>
+  <Button variant="cancel">Cancel</Button>
+  <Button variant="update">Update</Button>
+</div>
+
+</div>
+
     </div>
   );
 };

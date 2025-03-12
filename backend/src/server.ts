@@ -10,6 +10,7 @@ import { emailRoutes } from "./routes/task/emailRoutes";
 dotenv.config();
 
 const app = express();
+
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI as string;
 
@@ -22,6 +23,8 @@ app.use("/user", userRoutes); // Använd default import här
 // Använd rätt route för API-anrop
 app.use("/api", emailRoutes); // Detta gör att `/api/send-email` fungerar
 // Starta servern
+app.use("/api/user", userRoutes); // Viktig koppling!
+
 mongoose
   .connect(MONGO_URI)
   .then(() => {
