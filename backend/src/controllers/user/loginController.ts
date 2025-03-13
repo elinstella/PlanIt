@@ -5,6 +5,7 @@ import { createToken } from "../../services/user/authService";
 import User from "../../models/user/User";
 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400).json({ errors: errors.array() });
@@ -29,9 +30,8 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     }
 
     const token = createToken(user._id.toString());
-
     res.json({ token });
-
+    
   } catch (error) {
     console.error("❌ Server error during login:", error);
     res.status(500).json({ message: "Server error during login" });

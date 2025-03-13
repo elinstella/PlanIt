@@ -17,18 +17,12 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserState>) => {
-      state.id = action.payload.id;
-      state.name = action.payload.name;
-      state.email = action.payload.email;
+      return { ...state, ...action.payload }; // Ensure all fields are updated
     },
     updateUserName: (state, action: PayloadAction<string>) => {
-      state.name = action.payload; // Uppdatera endast namnet
+      state.name = action.payload;
     },
-    clearUser: (state) => {
-      state.id = null;
-      state.name = null;
-      state.email = null;
-    },
+    clearUser: () => initialState, // Reset to initial state
   },
 });
 
