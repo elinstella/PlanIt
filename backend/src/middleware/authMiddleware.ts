@@ -6,13 +6,12 @@ interface AuthenticatedRequest extends Request {
 }
 
 const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-  console.log("Request Headers:", req.headers);
+  console.log("🔹 Request Headers:", req.headers);
 
   const authHeader = req.header("Authorization");
   if (!authHeader) {
     console.log("❌ No Authorization header found!");
-    res.status(401).json({ message: "No token, authorization denied" });
-    return;
+    return void res.status(401).json({ message: "No token, authorization denied" });
   }
 
   console.log("✅ Found Authorization header:", authHeader);
@@ -20,32 +19,27 @@ const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunc
   const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
   if (!token) {
     console.log("❌ Token is missing after Bearer!");
-    res.status(401).json({ message: "Invalid token format" });
-    return;
+    return void res.status(401).json({ message: "Invalid token format" });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    console.log("✅ Decoded Token:", decoded); // ✅ Logga vad vi får!
+    console.log("✅ JWT_SECRET används för verifiering:", process.env.JWT_SECRET); 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    console.log("✅ Decoded Token:", decoded);
 
-    if (!decoded || typeof decoded === "string") {
-      console.log("❌ Token is invalid");
-      res.status(401).json({ message: "Invalid token" });
-      return;
+    if (!decoded || typeof decoded !== "object" || !decoded.userId) {
+      console.log("❌ Token is invalid or missing userId!", decoded);
+      return void res.status(401).json({ message: "Invalid token" });
     }
 
-    if (!decoded.userId) {
-      console.log("❌ Token saknar userId!", decoded);
-      res.status(401).json({ message: "Invalid token data" });
-      return;
-    }
-
-    req.user = { id: decoded.userId };
-    next();
+    req.user = { id: decoded.userId }; // ✅ Spara userId i request-objektet
+    console.log("✅ User authenticated:", req.user);
+    
+    next(); // ✅ Skicka vidare requesten till nästa middleware eller route-handler
   } catch (error) {
     console.log("❌ Token verification failed!", error);
-    res.status(401).json({ message: "Invalid token" });
+    return void res.status(401).json({ message: "Invalid token" });
   }
 };
 
-export { authMiddleware };
+export default authMiddleware;

@@ -74,7 +74,7 @@ const Profile: React.FC = () => {
     setErrors((prev) => ({ ...prev, name: "" }));
 
     try {
-      const response = await fetch("/api/profile/update-name", {
+      const response = await fetch("http://localhost:5000/api/profile/update-name", {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json", 
@@ -105,7 +105,7 @@ const Profile: React.FC = () => {
     if (Object.values(newErrors).some((error) => error)) return;
 
     try {
-      const response = await fetch("/api/profile/update-email", {
+      const response = await fetch("http://localhost:5000/api/profile/update-email", {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json", 
@@ -137,7 +137,7 @@ const Profile: React.FC = () => {
     if (Object.values(newErrors).some((error) => error)) return;
 
     try {
-      const response = await fetch("/api/profile/update-password", {
+      const response = await fetch("http://localhost:5000/api/profile/update-password", {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json", 
@@ -158,7 +158,7 @@ const Profile: React.FC = () => {
   const handleDeleteAccount = () => setIsModalOpen(true);
   const confirmDelete = async () => {
     try {
-      const response = await fetch("/api/profile/delete-account", {
+      const response = await fetch("http://localhost:5000/api/profile/delete-account", {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

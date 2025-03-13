@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/user/User";
-import { authMiddleware } from "../../middleware/authMiddleware";
+import authMiddleware from "../../middleware/authMiddleware";
 
 // Define the extended request interface to include `user`
 interface AuthenticatedRequest extends Request {

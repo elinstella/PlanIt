@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { registerUser } from "../../controllers/user/registerController";
 import { loginUser } from "../../controllers/user/loginController";
 import { body } from "express-validator";
-import { authMiddleware } from "../../middleware/authMiddleware";
+import authMiddleware from "../../middleware/authMiddleware";
 import asyncHandler from "express-async-handler";
 import { User } from "../../models/user/User";
 

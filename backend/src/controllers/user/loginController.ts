@@ -43,6 +43,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const token = createToken(user._id.toString());
 
     console.log("🔹 Skickar tillbaka token:", token);
+    console.log("✅ Token skapad vid inloggning:", token);
     res.json({ token });
   } catch (error) {
     console.error("❌ Serverfel vid inloggning:", error);

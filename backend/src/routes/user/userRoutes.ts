@@ -1,5 +1,5 @@
 import express from "express";
-import {authMiddleware} from "../../middleware/authMiddleware"; // ✅ Default import
+import authMiddleware from "../../middleware/authMiddleware"; // ✅ Default import
 import { getUserProfile, getUserEmail } from "../../controllers/user/userController";
 
 const router = express.Router();

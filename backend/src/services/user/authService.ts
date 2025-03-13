@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
+export const createToken = (userId: string): string => {
+  console.log("✅ JWT_SECRET vid token-generering:", process.env.JWT_SECRET); // Loggar hemligheten vid skapande av token
 
-export const createToken = (userId: string) => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "1h" });
+  return jwt.sign({ userId }, process.env.JWT_SECRET as string, {
+    expiresIn: "1h",
+  });
 };
