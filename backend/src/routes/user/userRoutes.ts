@@ -4,6 +4,9 @@ import { getUserProfile, getUserEmail } from "../../controllers/user/userControl
 
 const router = express.Router();
 
+// 🛠 Lägg till denna för att hantera `/api/user`
+router.get("/", authMiddleware, getUserProfile);
+
 // Protect these routes with authMiddleware
 router.get("/profile", authMiddleware, getUserProfile);
 router.get("/email", authMiddleware, getUserEmail);

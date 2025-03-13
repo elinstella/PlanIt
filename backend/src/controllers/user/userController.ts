@@ -1,39 +1,39 @@
 import { Request, Response } from "express";
 import User from "../../models/user/User";
 
-// Utöka Request-typen för att inkludera userId
-interface AuthRequest extends Request {
-  userId?: string;
+interface AuthenticatedRequest extends Request {
+  user?: { id: string }; // ✅ Matchar `authMiddleware.ts`
 }
 
-export const getUserProfile = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getUserProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    if (!req.userId) {
+    if (!req.user || !req.user.id) {
       res.status(401).json({ message: "Ej auktoriserad" });
-      return; // Viktigt! Avsluta funktionen här
+      return;
     }
 
-    const user = await User.findById(req.userId).select("-password"); // Fix: använd AuthRequest med userId
+    const user = await User.findById(req.user.id).select("-password"); // Hämta användare utan lösenord
     if (!user) {
       res.status(404).json({ message: "Användare hittades inte" });
-      return; // Avsluta funktionen om användaren inte hittas
+      return;
     }
 
-    res.json(user); // Skicka svaret utan att returnera något
+    res.json(user); // ✅ Returnera användardata
   } catch (error) {
+    console.error("❌ Serverfel:", error);
     res.status(500).json({ message: "Serverfel" });
   }
 };
 
 // Hämta endast användarens e-post
-export const getUserEmail = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getUserEmail = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    if (!req.userId) {
+    if (!req.user || !req.user.id) {
       res.status(401).json({ message: "Ej auktoriserad" });
       return;
     }
 
-    const user = await User.findById(req.userId).select("email");
+    const user = await User.findById(req.user.id).select("email");
     if (!user) {
       res.status(404).json({ message: "Användare hittades inte" });
       return;
@@ -41,7 +41,7 @@ export const getUserEmail = async (req: AuthRequest, res: Response): Promise<voi
 
     res.json({ email: user.email });
   } catch (error) {
-    console.error("Fel vid hämtning av e-post:", error);
+    console.error("❌ Fel vid hämtning av e-post:", error);
     res.status(500).json({ message: "Serverfel" });
   }
 };
