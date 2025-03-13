@@ -7,8 +7,15 @@ import { router as userRoutes } from "./routes/user/userRoutes";
 import { emailRoutes } from "./routes/task/emailRoutes";
 import profileRoutes from "./routes/user/profileRoutes"; // Kontrollera att denna import är rätt
 
+import path from "path";
 
-dotenv.config();
+// 🚀 Försök ladda .env explicit
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+console.log("🔍 EMAIL_USER:", process.env.EMAIL_USER);
+console.log("🔍 EMAIL_PASS:", process.env.EMAIL_PASS ? "**** (Lösenord dolt)" : "❌ MISSING!");
+
+
 
 console.log("✅ Använd JWT_SECRET:", process.env.JWT_SECRET);
 

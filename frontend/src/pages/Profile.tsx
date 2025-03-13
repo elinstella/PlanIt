@@ -7,6 +7,7 @@ import Alert from "../components/UI/Alert";
 const Profile: React.FC = () => {
   const [name, setName] = useState("");
   const [newEmail, setNewEmail] = useState("");
+  const [currentEmail, setCurrentEmail] = useState("");
   const [confirmNewEmail, setConfirmNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -54,6 +55,7 @@ const Profile: React.FC = () => {
         console.log("✅ User data:", data);
   
         setName(data.name);
+        setCurrentEmail(data.email)
       } catch (error) {
         console.error("❌ Fetch error:", error);
       }
@@ -185,6 +187,7 @@ const Profile: React.FC = () => {
         <Button variant="update" className="mt-3 w-full" onClick={handleUpdateName}>Update</Button>
 
         <h2 className="text-lg font-semibold text-lavender mt-6">Change Email</h2>
+        <InputField type="email" value={currentEmail} disabled placeholder="Current Email" />
         <InputField type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="New Email" error={errors.newEmail} />
         <InputField type="email" value={confirmNewEmail} onChange={(e) => setConfirmNewEmail(e.target.value)} placeholder="Confirm New Email" error={errors.confirmNewEmail} />
         <Button variant="update" className="mt-3 w-full" onClick={handleUpdateEmail}>Update Email</Button>

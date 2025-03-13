@@ -27,6 +27,8 @@
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/webidl-conversions": "^7.0.3",
+    "@types/whatwg-url": "^13.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
