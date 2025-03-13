@@ -1,63 +1,63 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import User from "../../models/user/User";
 import authMiddleware from "../../middleware/authMiddleware";
 
-// Define the extended request interface to include `user`
 interface AuthenticatedRequest extends Request {
   user?: { id: string };
 }
 
 const router = express.Router();
 
-// 🔹 Update Name
+// ✅ Update Name
 router.put(
   "/update-name",
   authMiddleware,
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { name } = req.body;
+
     if (!name) {
-      res.status(400).json({ message: "Name field cannot be empty." });
-      return; // Ensure the function exits
+      res.status(400).json({ message: "Name cannot be empty." });
+      return;
     }
 
     try {
       await User.findByIdAndUpdate(req.user?.id, { name });
-      res.json({ message: "Name updated successfully!" });
+      res.json({ message: "Name updated successfully." });
     } catch (error) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: "An error occurred while updating the name." });
     }
   }
 );
 
-// 🔹 Update Email
+// ✅ Update Email
 router.put(
   "/update-email",
   authMiddleware,
   async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     const { newEmail } = req.body;
+
     if (!newEmail) {
       res.status(400).json({ message: "New email is required." });
       return;
     }
 
     try {
-      const user = await User.findOne({ email: newEmail });
-      if (user) {
-        res.status(400).json({ message: "Email already in use." });
+      const existingUser = await User.findOne({ email: newEmail });
+      if (existingUser) {
+        res.status(400).json({ message: "This email is already in use." });
         return;
       }
 
       await User.findByIdAndUpdate(req.user?.id, { email: newEmail });
-      res.json({ message: "Email updated successfully!" });
+      res.json({ message: "Email updated successfully." });
     } catch (error) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: "An error occurred while updating the email." });
     }
   }
 );
 
-// 🔹 Update Password
+// ✅ Update Password
 router.put(
   "/update-password",
   authMiddleware,
@@ -66,7 +66,7 @@ router.put(
     const passwordRegex = /(?=.*[A-Z])(?=.*[0-9!@#$%^&*()\-=_+])(?=.{8,})/;
 
     if (!newPassword.match(passwordRegex)) {
-      res.status(400).json({ message: "Password must meet complexity requirements." });
+      res.status(400).json({ message: "Password must be at least 8 characters long, contain an uppercase letter, and include a number or special character." });
       return;
     }
 
@@ -75,14 +75,14 @@ router.put(
       const hashedPassword = await bcrypt.hash(newPassword, salt);
       await User.findByIdAndUpdate(req.user?.id, { password: hashedPassword });
 
-      res.json({ message: "Password updated successfully!" });
+      res.json({ message: "Password updated successfully." });
     } catch (error) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: "An error occurred while updating the password." });
     }
   }
 );
 
-// 🔹 Delete Account
+// ✅ Delete Account
 router.delete(
   "/delete-account",
   authMiddleware,
@@ -91,7 +91,7 @@ router.delete(
       await User.findByIdAndDelete(req.user?.id);
       res.json({ message: "Account deleted successfully." });
     } catch (error) {
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: "An error occurred while deleting the account." });
     }
   }
 );

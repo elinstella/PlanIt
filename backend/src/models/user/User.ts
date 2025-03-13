@@ -14,7 +14,7 @@ interface IUser extends Document {
 const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // ❌ Ingen hashing här!
+  password: { type: String, required: true }, 
 });
 
 // Add a method to compare passwords

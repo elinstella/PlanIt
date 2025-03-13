@@ -8,56 +8,60 @@ import { User } from "../../models/user/User";
 import { forgotPassword } from "../../controllers/user/forgotPasswordController";
 import { resetPassword } from "../../controllers/user/resetPasswordController";
 
-
-
-// 🛠️ Anpassa Request-objektet så att TypeScript förstår att `req.user` finns
 interface AuthenticatedRequest extends Request {
   user?: { id: string };
 }
 
 const router = express.Router();
 
+// ✅ Password reset routes
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
-// ✅ Hämta användardata (skyddad route)
+// ✅ Get user profile (protected route)
 router.get(
   "/me",
   authMiddleware,
   asyncHandler(async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (!req.user || !req.user.id) {
-      return void res.status(401).json({ message: "Not authorized" });
+      res.status(401).json({ message: "Not authorized" });
+      return;
     }
 
     try {
       const user = await User.findById(req.user.id).select("-password");
-      if (!user) return void res.status(404).json({ message: "User not found" });
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
 
-      return void res.json(user);
+      res.json(user);
     } catch (error) {
-      return void res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: "Server error" });
     }
   })
 );
 
-
-// ✅ Registrera ny användare
+// ✅ Register new user
 router.post(
   "/register",
   [
-    body("name").notEmpty().withMessage("Namn krävs"),
-    body("email").isEmail().withMessage("Ogiltig e-post"),
-    body("password").isLength({ min: 6 }).withMessage("Lösenord måste vara minst 6 tecken"),
+    body("name").notEmpty().withMessage("Name is required"),
+    body("email").isEmail().withMessage("Invalid email"),
+    body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
   ],
-  asyncHandler(registerUser) // Wrappa controller med `asyncHandler` för att fånga asynkrona fel
+  asyncHandler(registerUser) // Wraps the controller with `asyncHandler` to catch async errors
 );
-// ✅ Verifiera e-postkod
+
+// ✅ Verify email code
 router.post("/verify-email", verifyEmailCode);
 
-
-// ✅ Logga in användare
-router.post("/login", asyncHandler(async (req, res) => {
-  await loginUser(req, res); // 🛠️ Lägg till `await` och anropa loginUser direkt
-}));
+// ✅ User login
+router.post(
+  "/login",
+  asyncHandler(async (req, res) => {
+    await loginUser(req, res); // ✅ Ensures `await` is used before calling loginUser
+  })
+);
 
 export default router;
