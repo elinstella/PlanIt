@@ -60,11 +60,11 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link to="/register" className="bg-warm-ocre text-background hover:bg-[#c47c2a] px-4 py-2 rounded-lg font-medium transition-all shadow-md">
-                Registrera
-              </Link>
               <Link to="/login" className="bg-primary text-soft-beige hover:bg-[#5e3a8c] px-4 py-2 rounded-lg font-medium transition-all shadow-md">
                 Logga in
+              </Link>
+              <Link to="/register" className="bg-warm-ocre text-background hover:bg-[#c47c2a] px-4 py-2 rounded-lg font-medium transition-all shadow-md">
+                Registrera
               </Link>
             </>
           )}

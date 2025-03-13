@@ -7,6 +7,7 @@ interface InputFieldProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   disabled?: boolean; 
+  required?: boolean;
 }
 
 const InputField: React.FC<InputFieldProps> = ({ type = "text", value, placeholder, onChange, error, disabled }) => {

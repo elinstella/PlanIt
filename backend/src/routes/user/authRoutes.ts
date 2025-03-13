@@ -5,6 +5,10 @@ import { body } from "express-validator";
 import authMiddleware from "../../middleware/authMiddleware";
 import asyncHandler from "express-async-handler";
 import { User } from "../../models/user/User";
+import { forgotPassword } from "../../controllers/user/forgotPasswordController";
+import { resetPassword } from "../../controllers/user/resetPasswordController";
+
+
 
 // 🛠️ Anpassa Request-objektet så att TypeScript förstår att `req.user` finns
 interface AuthenticatedRequest extends Request {
@@ -12,6 +16,9 @@ interface AuthenticatedRequest extends Request {
 }
 
 const router = express.Router();
+
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
 
 // ✅ Hämta användardata (skyddad route)
 router.get(
