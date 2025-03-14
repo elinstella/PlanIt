@@ -1,59 +1,156 @@
 @import "tailwindcss";
 
+.navbar-gradient {
+  background: linear-gradient(
+    to right, 
+    #e9a857, /* Mjuk orange */
+    #d68b4a, /* Varm brunorange */
+    #a96c3a, /* Jordig brun */
+    #73502e, /* Mörk chokladbrun */
+    #5a4331, /* Djup jordnära brun */
+    #484f6e, /* Mörk blågrå */
+    #625a7c, /* Dämpad lila-grå */
+    #7d6f8d, /* Mjuk lila-grå */
+    #9b7d88, /* Dämpad rosa-brun */
+    #b89292  /* Ljusare beige-rosa */
+  ) !important;
+}
+
+
 
 /* Anpassade färger */
 @layer utilities {
+  /* 🎨 Bakgrundsfärger */
+
+  
   .bg-background {
-    background-color: #1C213E; /* Djup Mörkblå */
+    background-color: #5a4331; /* Djup jordnära brun */
   }
   
-  .bg-dark-purple {
-    background-color: #44325A; /* Mörklila */
+  .bg-dark {
+    background-color: #73502e; /* Mörk chokladbrun */
   }
 
   .bg-primary {
-    background-color: #704A9F; /* Klarare Lila */
+    background-color: #e9a857; /* Mjuk orange */
   }
 
-  .bg-lavender {
-    background-color: #A78BC4; /* Mild Lavendel */
+  .bg-secondary {
+    background-color: #d68b4a; /* Varm brunorange */
   }
 
-  .bg-warm-brown {
-    background-color: #C58B6A; /* Dämpad Gyllene Brun */
+  .bg-accent {
+    background-color: #a96c3a; /* Jordig brun */
   }
 
-  .bg-warm-ocre {
-    background-color: #E0A878; /* Mjuk Ockra */
+  .bg-neutral {
+    background-color: #5a4331; /* Djup jordnära brun */
   }
 
-  .bg-soft-beige {
-    background-color: #F6E9E0; /* Ljus Beige (Text & UI) */
+  .bg-bluegray {
+    background-color: #484f6e; /* Mörk blågrå */
   }
 
-  /* Textfärger */
+  .bg-mutedlilac {
+    background-color: #625a7c; /* Dämpad lila-grå */
+  }
+
+  .bg-softlilac {
+    background-color: #7d6f8d; /* Mjuk lila-grå */
+  }
+
+  .bg-rosebrown {
+    background-color: #9b7d88; /* Dämpad rosa-brun */
+  }
+
+  .bg-warmbeige {
+    background-color: #b89292; /* Ljusare beige-rosa */
+  }
+
+  .bg-red {
+    background-color: #5e3a3a; /* Mörk chokladbrun */
+  }
+  
+  .bg-red-dark {
+    background-color: #2d1717; /* Ännu mörkare röd */
+  }
+  
+  /* 🎨 Textfärger */
   .text-background {
-    color: #1C213E;
+    color: #412e21; /* Djup jordnära brun */
   }
 
-  .text-dark-purple {
-    color: #44325A;
+  .text-dark {
+    color: #73502e; /* Mörk chokladbrun */
   }
 
   .text-primary {
-    color: #704A9F;
+    color: #e9a857; /* Mjuk orange */
   }
 
-  .text-soft-beige {
-    color: #F6E9E0;
+  .text-secondary {
+    color: #d68b4a; /* Varm brunorange */
   }
 
-  /* Hover-effekter */
-  .hover\:bg-lavender:hover {
-    background-color: #A78BC4;
+  .text-accent {
+    color: #a96c3a; /* Jordig brun */
   }
 
-  .hover\:bg-warm-brown:hover {
-    background-color: #C58B6A;
+  .text-neutral {
+    color: #5a4331; /* Djup jordnära brun */
+  }
+
+  .text-bluegray {
+    color: #484f6e; /* Mörk blågrå */
+  }
+
+  .text-mutedlilac {
+    color: #d68b4a; /* Dämpad lila-grå */
+  }
+
+  .text-softlilac {
+    color: #7d6f8d; /* Mjuk lila-grå */
+  }
+
+  .text-rosebrown {
+    color: #9b7d88; /* Dämpad rosa-brun */
+  }
+
+  .text-warmbeige {
+    color: #b89292; /* Ljusare beige-rosa */
+  }
+
+
+  /* 🎨 Hover-effekter */
+  .hover\:bg-primary:hover {
+    background-color: #f0b96a; /* Ljusare orange */
+  }
+
+  .hover\:bg-secondary:hover {
+    background-color: #e09d63; /* Ljusare brunorange */
+  }
+
+  .hover\:bg-accent:hover {
+    background-color: #bb8250; /* Ljusare jordig brun */
+  }
+
+  .hover\:bg-neutral:hover {
+    background-color: #7a5a45; /* Ljusare jordnära brun */
+  }
+
+  .hover\:bg-mutedlilac:hover {
+    background-color: #7b7192; /* Ljusare dämpad lila */
+  }
+
+  .hover\:bg-softlilac:hover {
+    background-color: #9a8bac; /* Ljusare mjuk lila */
+  }
+
+  .hover\:bg-rosebrown:hover {
+    background-color: #b3959f; /* Ljusare rosa-brun */
+  }
+
+  .hover\:bg-warmbeige:hover {
+    background-color: #d3a8a7; /* Ljusare beige-rosa */
   }
 }

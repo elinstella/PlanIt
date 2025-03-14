@@ -9,23 +9,31 @@ interface AlertProps {
 }
 
 const alertStyles = {
-  success: "text-green-800 border-green-900",
-  error: "text-red-800 border-red-900",
-  warning: "text-yellow-800 border-yellow-900",
-  info: "text-blue-800 border-blue-900",
+  success: "bg-green-100 text-green-900 border-green-800",
+  error: "bg-red-100 text-red-900 border-red-800",
+  warning: "bg-yellow-100 text-yellow-900 border-yellow-800",
+  info: "bg-blue-100 text-blue-900 border-blue-800",
 };
 
 const Alert: React.FC<AlertProps> = ({ type = "info", message, onClose }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-12">
-      <div className={cn("p-8 rounded-2xl  text-center text-xl font-semibold bg-opacity-90", "bg-[#F6E9E0]", alertStyles[type])}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+      <div
+        className={cn(
+          "p-6 rounded-2xl border-2 shadow-lg w-full max-w-sm text-center text-lg font-semibold",
+          alertStyles[type]
+        )}
+      >
         <p className="mb-4">{message}</p>
+
         {onClose && (
-          <div className="flex justify-center">
-            <Button variant="close" onClick={onClose} className="px-6 py-3 text-lg font-bold">
-              Close
-            </Button>
-          </div>
+          <Button
+            variant="close"
+            onClick={onClose}
+            className="w-full py-2 rounded-lg text-lg font-medium transition-all"
+          >
+            Close
+          </Button>
         )}
       </div>
     </div>

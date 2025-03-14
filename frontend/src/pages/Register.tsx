@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import InputField from "../components/UI/InputField"; // ✅ Import InputField
 import VerifyEmail from "../components/api/VerifyEmail";
 
 const Register = () => {
@@ -15,61 +16,111 @@ const Register = () => {
     e.preventDefault();
     setError("");
     setResendMessage("");
+
     try {
       const res = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
+
       const data = await res.json();
-      if (!res.ok) return setError(data.message);
+      if (!res.ok) {
+        setError(data.message);
+        return;
+      }
+
       setStep(2);
     } catch (err) {
-      console.log(err);
-      setError("Kunde inte ansluta till servern");
+      console.error("❌ Registration error:", err);
+      setError("Could not connect to the server.");
     }
   };
 
   const handleResendCode = async () => {
     setResendMessage("");
+
     try {
       const res = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
+
       const data = await res.json();
-      if (!res.ok) return setError(data.message);
+      if (!res.ok) {
+        setError(data.message);
+        return;
+      }
+
       setResendMessage("A new verification code has been sent!");
     } catch (err) {
-      console.log(err);
-      setError("Could not send a new code");
+      console.error("❌ Error resending code:", err);
+      setError("Could not send a new code.");
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold">Register</h1>
-      {step === 1 ? (
-        <form onSubmit={handleRegister} className="flex flex-col gap-4 p-6 bg-white shadow-md rounded-lg w-80">
-          <input type="text" placeholder="Name" className="p-2 border rounded" value={name} onChange={(e) => setName(e.target.value)} required />
-          <input type="email" placeholder="Email" className="p-2 border rounded" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input type="password" placeholder="Password" className="p-2 border rounded" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          {error && <p className="text-red-500">{error}</p>}
-          <button type="submit" className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">Register</button>
-        </form>
-      ) : (
-        <div className="flex flex-col items-center gap-4 p-6 bg-white shadow-md rounded-lg w-80">
-          <p className="text-gray-700 text-center">
-            A mail has been sent for verification, check your inbox. If you haven't received it, you can resend the email below.
-          </p>
-          <VerifyEmail name={name} email={email} password={password} onSuccess={() => navigate("/login")} />
-          <button onClick={handleResendCode} className="text-blue-600 underline">
-            Resend verification email
-          </button>
-          {resendMessage && <p className="text-green-500">{resendMessage}</p>}
-        </div>
-      )}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-neutral px-4">
+      {/* 🔹 Registration Box */}
+      <div className="bg-dark bg-background text-dark p-10 rounded-lg shadow-lg w-full max-w-lg text-center">
+        
+        {/* 🔹 Title */}
+        <h1 className="text-4xl text-bluegray font-bold mb-6">Register</h1>
+
+        {/* 🔹 Step 1: Registration Form */}
+        {step === 1 ? (
+          <form onSubmit={handleRegister} className="flex flex-col gap-5">
+            <InputField
+              type="text"
+              value={name}
+              placeholder="Enter your name"
+              onChange={(e) => setName(e.target.value)}
+            />
+            <InputField
+              type="email"
+              value={email}
+              placeholder="Enter your email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <InputField
+              type="password"
+              value={password}
+              placeholder="Enter your password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+
+            <button type="submit" className="bg-primary text-soft-beige py-3 rounded-lg text-lg font-semibold hover:bg-primary-light transition-all">
+              Register
+            </button>
+
+            {/* 🔹 Already have an account? */}
+            <p className="text-sm text-warmbeige mt-2">
+              Already have an account?{" "}
+              <Link to="/login" className="text-primary-light hover:underline">
+                Login here
+              </Link>
+            </p>
+          </form>
+        ) : (
+          /* 🔹 Step 2: Verification Message */
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-softlilac text-center">
+              A mail has been sent for verification, check your inbox. If you haven't received it, you can resend the email below.
+            </p>
+            
+            <VerifyEmail name={name} email={email} password={password} onSuccess={() => navigate("/login")} />
+
+            <button onClick={handleResendCode} className="text-primary-light hover:underline">
+              Resend verification email
+            </button>
+
+            {resendMessage && <p className="text-green-500 text-sm">{resendMessage}</p>}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -6,7 +6,10 @@ import jwt from "jsonwebtoken";
  * @returns A signed JWT token
  */
 export const createToken = (userId: string): string => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET as string, {
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, {
     expiresIn: "1h",
   });
+
+  console.log("🔑 JWT Token Created:", token); // ✅ Log the generated token
+  return token;
 };

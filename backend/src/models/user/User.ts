@@ -14,7 +14,18 @@ interface IUser extends Document {
 const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, 
+  password: { type: String, required: true },
+});
+
+// ✅ Ensure `_id` is always included as `id` in JSON responses
+UserSchema.set("toJSON", {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret.id = ret._id.toString(); // ✅ Convert `_id` to `id`
+    delete ret._id; // ✅ Remove `_id` to avoid confusion
+    delete ret.__v; // ✅ Remove version key
+    delete ret.password; // ✅ Remove password for security
+  },
 });
 
 // Add a method to compare passwords

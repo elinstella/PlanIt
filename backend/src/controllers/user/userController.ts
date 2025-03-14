@@ -21,17 +21,22 @@ export const getUserProfile = async (req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user.id).select("_id name email"); // ✅ Explicitly select `_id`
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    res.json(user);
+    res.json({
+      id: user._id.toString(), // ✅ Convert `_id` to string and return as `id`
+      name: user.name,
+      email: user.email,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 /**
  * Retrieves only the authenticated user's email.
