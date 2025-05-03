@@ -1,8 +1,10 @@
+// components/Navbar.tsx
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/store";
 import { clearUser } from "../store/userSlice";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -10,11 +12,7 @@ const Navbar = () => {
   const { id, name } = useSelector((state: RootState) => state.user);
   const isLoggedIn = !!id;
 
-  const [forceRender, setForceRender] = useState(0);
-
-  useEffect(() => {
-    setForceRender((prev) => prev + 1);
-  }, [id, name]);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     dispatch(clearUser());
@@ -22,52 +20,97 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-background shadow-lg sticky top-0 z-50">
-      <nav className="navbar-gradient py-4 px-6 md:px-12 shadow-md rounded-b-2xl" key={forceRender}>
-        <div className="container mx-auto flex items-center justify-between text-warmbeige">
-          {/* Logo */}
-          <Link to="/" className="text-3xl md:text-4xl font-extrabold tracking-wide hover:scale-105 transition-transform text-dark">
-            PlanIt
-          </Link>
+    <div className="bg-background sticky top-0 z-50">
+      <div className="rounded-b-3xl shadow-md overflow-hidden">
+        <nav className="navbar-gradient py-6 px-6 md:px-12 relative">
+          <div className="container max-w-screen-xl mx-auto flex items-center justify-between">
+            {/* Logo */}
+            <Link
+              to="/"
+              className="text-4xl font-extrabold tracking-wide text-dark"
+            >
+              PlanIt
+            </Link>
 
-          {/* Menylänkar centrerade i navbaren */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex space-x-8 text-lg md:text-xl font-semibold">
-            <Link to="/" className="hover:text-dark transition-all">Home</Link>
-            <Link to="/about" className="hover:text-dark transition-all">About Us</Link>
+            {/* Mobile Menu Toggle */}
+            <button
+              className="lg:hidden text-white"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <X size={32} /> : <Menu size={32} />}
+            </button>
+
+            {/* Centered Desktop Menu (Only on large screens) */}
+            <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-10 text-white font-semibold text-xl">
+              <Link to="/" className="hover:text-primary transition">Home</Link>
+              <Link to="/about" className="hover:text-primary transition">About Us</Link>
+              {isLoggedIn && (
+                <>
+                  <Link to="/dashboard" className="hover:text-primary transition">Dashboard</Link>
+                  <Link to="/add-todo" className="hover:text-primary transition">Add Todo</Link>
+                </>
+              )}
+            </div>
+
+            {/* Right-side Controls */}
+            <div className="hidden lg:flex items-center gap-4 text-white">
+              {isLoggedIn ? (
+                <>
+                  <span className="text-white text-lg">Hello, {name}!</span>
+                  <Link to="/profile" className="hover:text-primary text-lg">Profile</Link>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-dark hover:bg-primary text-white px-4 py-2 rounded-lg transition text-lg"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition text-lg"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary-dark transition text-lg"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Profil & Inloggning/Utloggning till höger */}
-          <div className="flex items-center space-x-4 md:space-x-6 text-sm md:text-lg font-medium">
-            {isLoggedIn ? (
-              <>
-                <span className="font-semibold text-dark text-base md:text-xl">Hello, {name}!</span>
-                <Link to="/profile" className="hover:text-dark transition-all text-base md:text-xl">Profile</Link>
-                <button
-                  onClick={handleLogout}
-                  className="bg-dark hover:bg-neutral px-4 md:px-5 py-2 md:py-3 rounded-lg font-medium transition-all shadow-md text-base md:text-lg"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="bg-primary text-warmbeige hover:bg-primary-light px-4 md:px-5 py-2 md:py-3 rounded-lg font-medium transition-all shadow-md text-base md:text-lg"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="bg-secondary text-warmbeige hover:bg-secondary-light px-4 md:px-5 py-2 md:py-3 rounded-lg font-medium transition-all shadow-md text-base md:text-lg"
-                >
-                  Register
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
+          {/* Mobile Dropdown Menu */}
+          {menuOpen && (
+  <div className="lg:hidden mt-4 flex flex-col items-end text-right gap-4 text-white font-medium px-6 animate-fade-in">
+    <Link to="/" onClick={() => setMenuOpen(false)} className="w-full">Home</Link>
+    <Link to="/about" onClick={() => setMenuOpen(false)} className="w-full">About Us</Link>
+    {isLoggedIn && (
+      <>
+        <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="w-full">Dashboard</Link>
+        <Link to="/add-todo" onClick={() => setMenuOpen(false)} className="w-full">Add Todo</Link>
+      </>
+    )}
+    {isLoggedIn ? (
+      <>
+        <Link to="/profile" onClick={() => setMenuOpen(false)} className="w-full">Profile</Link>
+        <button onClick={handleLogout} className="w-full text-right">Logout</button>
+      </>
+    ) : (
+      <>
+        <Link to="/login" onClick={() => setMenuOpen(false)} className="w-full">Login</Link>
+        <Link to="/register" onClick={() => setMenuOpen(false)} className="w-full">Register</Link>
+      </>
+    )}
+  </div>
+)}
+
+        </nav>
+      </div>
     </div>
   );
 };
