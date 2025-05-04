@@ -12,7 +12,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | "update"
     | "close"
     | "verify"
-    | "reset";
+    | "reset"
+    | "profile"; 
 }
 
 const Button: React.FC<ButtonProps> = ({ variant = "login", className, children, ...props }) => {
@@ -30,6 +31,8 @@ const Button: React.FC<ButtonProps> = ({ variant = "login", className, children,
       close: "bg-gray-400 text-button hover:bg-gray-500",
       verify: "bg-bluegray text-button hover:bg-bluegray-light",
       reset: "bg-softlilac text-button hover:bg-softlilac-light",
+      profile: "bg-primary text-white hover:bg-primary-light",
+
     };
     
 

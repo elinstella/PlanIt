@@ -22,41 +22,43 @@ const TodoCard = ({ todo, onToggle, onDelete }: Props) => {
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className={`rounded-xl p-5 shadow hover:shadow-lg transition ${
+      whileHover={{ scale: 1.02 }}
+      className={`rounded-xl p-5 shadow hover:shadow-lg transition-all duration-200 ${
         todo.completed ? "bg-gray-700 opacity-70 line-through" : "bg-dark"
-      } text-white`}
+      } text-white h-full flex flex-col justify-between`}
     >
-      <div className="flex justify-between items-start mb-2">
-        <h3 className="font-bold text-xl">{todo.title}</h3>
-        <input
-          type="checkbox"
-          checked={todo.completed}
-          onChange={() => onToggle(todo._id, !todo.completed)}
-          className="h-5 w-5 accent-mutedlilac"
-        />
+      <div>
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-bold text-xl">{todo.title}</h3>
+          <input
+            type="checkbox"
+            checked={todo.completed}
+            onChange={() => onToggle(todo._id, !todo.completed)}
+            className="h-5 w-5 accent-mutedlilac"
+          />
+        </div>
+
+        {todo.description && (
+          <p className="text-sm text-bluegray mb-2">{todo.description}</p>
+        )}
+
+        <div className="text-xs text-muted leading-6 space-y-1">
+          <p>🗓 {todo.dueDate || "No date"} ⏰ {todo.dueTime || "No time"}</p>
+          <p>📍 {todo.location || "No location"}</p>
+          <p>
+            📁 {todo.category || "Uncategorized"} •{" "}
+            <span className={`${colorClass} font-medium`}>{priority}</span>
+          </p>
+        </div>
       </div>
 
-      {todo.description && (
-        <p className="text-sm text-bluegray mb-2">{todo.description}</p>
-      )}
-
-      <div className="text-xs text-muted leading-6 space-y-1">
-        <p>🗓 {todo.dueDate || "No date"} ⏰ {todo.dueTime || "No time"}</p>
-        <p>📍 {todo.location || "No location"}</p>
-        <p>
-          📁 {todo.category || "Uncategorized"} •{" "}
-          <span className={`${colorClass} font-medium`}>{priority}</span>
-        </p>
-      </div>
-
-      <div className="mt-4 flex gap-4">
+      <div className="mt-4">
         <button
           onClick={() => onDelete(todo._id)}
           className="text-sm text-red-400 hover:underline"
         >
           Delete
         </button>
-        {/* Redigera-funktion kan kopplas här */}
       </div>
     </motion.div>
   );

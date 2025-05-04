@@ -12,15 +12,14 @@ const TodoGrid = ({ todos, onToggle, onDelete }: Props) => {
     return <p className="text-bluegray">No todos to display.</p>;
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {todos.map((todo) => (
-        <TodoCard
-          key={todo._id}
-          todo={todo}
-          onToggle={onToggle}
-          onDelete={onDelete}
-        />
-      ))}
+    <div className="overflow-x-auto">
+      <div className="grid grid-rows-2 auto-cols-[320px] gap-4 w-max max-w-full overflow-x-auto grid-flow-col py-4">
+        {todos.map((todo) => (
+          <div key={todo._id} className="h-[220px]">
+            <TodoCard todo={todo} onToggle={onToggle} onDelete={onDelete} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
