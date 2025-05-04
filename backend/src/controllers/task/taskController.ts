@@ -1,47 +1,92 @@
 import { Request, Response } from 'express';
 import { Task } from '../../models/task/Task';
 
-// Hämta alla uppgifter
+// Hämta alla aktiva uppgifter
 export const getTasks = async (req: Request, res: Response) => {
-    try {
-        const tasks = await Task.find();
-        res.json(tasks);
-    } catch (error) {
-        res.status(500).json({ message: 'Serverfel', error });
-    }
+  try {
+    const tasks = await Task.find({ deleted: false });
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: 'Serverfel', error });
+  }
+};
+
+// Hämta uppgifter i papperskorgen
+export const getTrashedTasks = async (req: Request, res: Response) => {
+  try {
+    const tasks = await Task.find({ deleted: true });
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: 'Serverfel vid hämtning av papperskorg', error });
+  }
 };
 
 // Skapa en ny uppgift
 export const createTask = async (req: Request, res: Response) => {
-    try {
-        const { title, description, priority, dueDate, dueTime, category } = req.body;
-        const newTask = new Task({ title, description, priority, dueDate, dueTime, category });
-        await newTask.save();
-        res.json(newTask);
-    } catch (error) {
-        res.status(400).json({ message: 'Fel vid skapande av uppgift', error });
-    }
+  try {
+    const { title, description, priority, dueDate, dueTime, category, location } = req.body;
+    const newTask = new Task({ title, description, priority, dueDate, dueTime, category, location });
+    await newTask.save();
+    res.json(newTask);
+  } catch (error) {
+    res.status(400).json({ message: 'Fel vid skapande av uppgift', error });
+  }
 };
-
 
 // Uppdatera en uppgift
 export const updateTask = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const updatedTask = await Task.findByIdAndUpdate(id, req.body, { new: true });
-        res.json(updatedTask);
-    } catch (error) {
-        res.status(400).json({ message: 'Fel vid uppdatering', error });
-    }
+  try {
+    const { id } = req.params;
+    const updatedTask = await Task.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(updatedTask);
+  } catch (error) {
+    res.status(400).json({ message: 'Fel vid uppdatering', error });
+  }
 };
 
-// Ta bort en uppgift
+// Flytta till papperskorg (soft delete)
 export const deleteTask = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        await Task.findByIdAndDelete(id);
-        res.json({ message: 'Uppgift raderad' });
-    } catch (error) {
-        res.status(400).json({ message: 'Fel vid radering', error });
-    }
+  try {
+    const { id } = req.params;
+    await Task.findByIdAndUpdate(id, {
+      deleted: true,
+      deletedAt: new Date(),
+    });
+    res.json({ message: 'Flyttad till papperskorgen' });
+  } catch (error) {
+    res.status(400).json({ message: 'Fel vid radering', error });
+  }
+};
+
+
+// Återställ från papperskorgen
+export const restoreTask = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const restored = await Task.findByIdAndUpdate(id, { deleted: false }, { new: true });
+    res.json(restored);
+  } catch (error) {
+    res.status(400).json({ message: 'Kunde inte återställa uppgift', error });
+  }
+};
+
+// Permanent radera från DB
+export const deleteTaskPermanently = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await Task.findByIdAndDelete(id);
+    res.json({ message: 'Uppgift permanent borttagen' });
+  } catch (error) {
+    res.status(400).json({ message: 'Kunde inte ta bort uppgiften permanent', error });
+  }
+};
+
+// Töm hela papperskorgen (permanent radering av alla soft-deleted uppgifter)
+export const emptyTrash = async (req: Request, res: Response) => {
+  try {
+    await Task.deleteMany({ deleted: true });
+    res.json({ message: 'Papperskorgen tömd' });
+  } catch (error) {
+    res.status(500).json({ message: 'Kunde inte tömma papperskorgen', error });
+  }
 };

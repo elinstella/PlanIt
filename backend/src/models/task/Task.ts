@@ -1,17 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const TaskSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true },
-    description: { type: String },
-    priority: { type: String, default: "Medium" },
-    dueDate: { type: String },
-    dueTime: { type: String },
-    category: { type: String, default: "General" },
-    location: { type: String }, // 👈 Lägg till detta
-    completed: { type: Boolean, default: false } // 👈 Redan korrekt
-  },
-  { timestamps: true }
-);
+const taskSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: String,
+  priority: String,
+  dueDate: String,
+  dueTime: String,
+  category: String,
+  location: String,
+  completed: { type: Boolean, default: false },
+  deleted: { type: Boolean, default: false },
+  deletedAt: { type: Date }, // 👈 behövs för TrashView
+});
 
-export const Task = mongoose.model('Task', TaskSchema);
+export const Task = mongoose.model("Task", taskSchema);
