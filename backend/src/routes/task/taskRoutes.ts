@@ -7,13 +7,13 @@ import {
   deleteTask,
   restoreTask,
   deleteTaskPermanently,
-  emptyTrash, // 👈 lägg till denna
+  emptyTrash, 
 } from '../../controllers/task/taskController';
 
 const router = express.Router();
 
 router.get('/', getTasks);
-router.get('/trash', getTrashedTasks); // 🧠 detta saknades!
+router.get('/trash', getTrashedTasks); 
 router.post('/', createTask);
 router.put('/:id', updateTask);
 router.delete('/:id', deleteTask);

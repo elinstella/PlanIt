@@ -20,14 +20,14 @@ const UserSchema = new Schema<IUser>({
 
 });
 
-// ✅ Ensure `_id` is always included as `id` in JSON responses
+// Ensure `_id` is always included as `id` in JSON responses
 UserSchema.set("toJSON", {
   virtuals: true,
   transform: (doc, ret) => {
-    ret.id = ret._id.toString(); // ✅ Convert `_id` to `id`
-    delete ret._id; // ✅ Remove `_id` to avoid confusion
-    delete ret.__v; // ✅ Remove version key
-    delete ret.password; // ✅ Remove password for security
+    ret.id = ret._id.toString(); 
+    delete ret._id; 
+    delete ret.__v; 
+    delete ret.password; 
   },
 });
 

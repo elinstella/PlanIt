@@ -29,11 +29,10 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     const token = createToken(user._id.toString());
 
-    // ✅ Return user details along with the token
     res.json({
       token,
       user: {
-        id: user._id.toString(), // Ensure ID is included
+        id: user._id.toString(), 
         name: user.name,
         email: user.email,
       },

@@ -9,7 +9,7 @@ interface AuthenticatedRequest extends Request {
 
 const router = express.Router();
 
-// ✅ Update Name
+// Update Name
 router.put(
   "/update-name",
   authMiddleware,
@@ -30,7 +30,7 @@ router.put(
   }
 );
 
-// ✅ Update Email
+// Update Email
 router.put(
   "/update-email",
   authMiddleware,
@@ -57,7 +57,7 @@ router.put(
   }
 );
 
-// ✅ Update Password
+// Update Password
 router.put(
   "/update-password",
   authMiddleware,
@@ -82,7 +82,7 @@ router.put(
   }
 );
 
-// ✅ Delete Account
+// Delete Account
 router.delete(
   "/delete-account",
   authMiddleware,

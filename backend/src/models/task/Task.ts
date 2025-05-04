@@ -10,7 +10,7 @@ const taskSchema = new mongoose.Schema({
   location: String,
   completed: { type: Boolean, default: false },
   deleted: { type: Boolean, default: false },
-  deletedAt: { type: Date }, // 👈 behövs för TrashView
+  deletedAt: { type: Date }, 
 });
 
 export const Task = mongoose.model("Task", taskSchema);

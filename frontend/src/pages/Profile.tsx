@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import Button from "../components/UI/Button";
 import InputField from "../components/UI/InputField";
 import Modal from "../components/UI/Modal";
-import Alert from "../components/UI/Alert"; 
-import { setUser } from "../store/userSlice"; // Import Redux action
-import { useDispatch } from "react-redux"; // ✅ Add this import
-
-
+import Alert from "../components/UI/Alert";
+import { setUser } from "../store/userSlice";
+import { useDispatch } from "react-redux";
 
 const Profile: React.FC = () => {
   const [name, setName] = useState("");
@@ -29,47 +27,28 @@ const Profile: React.FC = () => {
 
   const token = localStorage.getItem("token");
 
-
-  
-  // ✅ Hämta användarinfo vid sidladdning
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!token) {
-        console.error("❌ Inget token hittades i localStorage!");
-        return;
-      }
-  
-      console.log("🔹 Token som skickas:", token);
-  
+      if (!token) return;
+
       try {
         const response = await fetch("http://localhost:5000/api/auth/me", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
-  
-        console.log("🔹 Response status:", response.status);
-  
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("❌ Misslyckades hämta user data:", errorData);
-          return;
-        }
-  
+
+        if (!response.ok) return;
+
         const data = await response.json();
-        console.log("✅ User data:", data);
-  
         setName(data.name);
-        setCurrentEmail(data.email)
-      } catch (error) {
-        console.error("❌ Fetch error:", error);
+        setCurrentEmail(data.email);
+      } catch {
+        // Silent fail
       }
     };
-  
+
     fetchUserData();
   }, [token]);
-  
-
-
 
   const dispatch = useDispatch();
 
@@ -79,32 +58,29 @@ const Profile: React.FC = () => {
       return;
     }
     setErrors((prev) => ({ ...prev, name: "" }));
-  
+
     try {
       const response = await fetch("http://localhost:5000/api/profile/update-name", {
         method: "PUT",
-        headers: { 
-          "Content-Type": "application/json", 
-          Authorization: `Bearer ${token}` 
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ name }),
       });
-  
+
       if (!response.ok) throw new Error("Failed to update name");
-  
-      // ✅ Fetch updated user data from backend
+
       const updatedUserRes = await fetch("http://localhost:5000/api/auth/me", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+
       if (!updatedUserRes.ok) throw new Error("Failed to fetch updated user data");
-  
+
       const updatedUserData = await updatedUserRes.json();
-  
-      // ✅ Update Redux state
       dispatch(setUser(updatedUserData));
-  
+
       setAlertMessage("Name updated successfully!");
       setAlertType("success");
     } catch {
@@ -112,9 +88,6 @@ const Profile: React.FC = () => {
     }
   };
 
-
-
-  // ✅ Uppdatera e-post
   const handleUpdateEmail = async () => {
     const newErrors = { newEmail: "", confirmNewEmail: "" };
 
@@ -128,9 +101,9 @@ const Profile: React.FC = () => {
     try {
       const response = await fetch("http://localhost:5000/api/profile/update-email", {
         method: "PUT",
-        headers: { 
-          "Content-Type": "application/json", 
-          Authorization: `Bearer ${token}` 
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ newEmail }),
       });
@@ -143,7 +116,6 @@ const Profile: React.FC = () => {
     }
   };
 
-  // ✅ Uppdatera lösenord
   const handleUpdatePassword = async () => {
     const newErrors = { newPassword: "", confirmPassword: "" };
 
@@ -160,9 +132,9 @@ const Profile: React.FC = () => {
     try {
       const response = await fetch("http://localhost:5000/api/profile/update-password", {
         method: "PUT",
-        headers: { 
-          "Content-Type": "application/json", 
-          Authorization: `Bearer ${token}` 
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ newPassword }),
       });
@@ -175,8 +147,8 @@ const Profile: React.FC = () => {
     }
   };
 
-  // ✅ Ta bort konto
   const handleDeleteAccount = () => setIsModalOpen(true);
+
   const confirmDelete = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/profile/delete-account", {
@@ -187,7 +159,7 @@ const Profile: React.FC = () => {
       if (!response.ok) throw new Error("Failed to delete account");
 
       localStorage.removeItem("token");
-      window.location.href = "/"; // Redirecta användaren efter borttagning
+      window.location.href = "/";
     } catch {
       setAlertMessage("An error occurred while deleting your account.");
       setAlertType("success");
@@ -196,47 +168,40 @@ const Profile: React.FC = () => {
 
   return (
     <div className="bg-background min-h-screen flex items-center justify-center text-soft-beige p-6">
-    <div className="bg-dark p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
-      {/* 🔹 Header */}
-      <h1 className="text-3xl font-bold text-primary mb-6">Profile Settings</h1>
+      <div className="bg-dark p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
+        <h1 className="text-3xl font-bold text-primary mb-6">Profile Settings</h1>
 
-      {/* 🔹 Alert Message */}
-      {alertType && <Alert message={alertMessage} type={alertType} onClose={() => setAlertType(null)} />}
+        {alertType && <Alert message={alertMessage} type={alertType} onClose={() => setAlertType(null)} />}
 
-      {/* 🔹 Change Name */}
-      <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Name</h2>
-      <InputField value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" error={errors.name} />
-      <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdateName}>Update</Button>
+        <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Name</h2>
+        <InputField value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" error={errors.name} />
+        <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdateName}>Update</Button>
 
-      {/* 🔹 Change Email */}
-      <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Email</h2>
-      <InputField type="email" value={currentEmail} disabled placeholder="Current Email" />
-      <InputField type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="New Email" error={errors.newEmail} />
-      <InputField type="email" value={confirmNewEmail} onChange={(e) => setConfirmNewEmail(e.target.value)} placeholder="Confirm New Email" error={errors.confirmNewEmail} />
-      <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdateEmail}>Update Email</Button>
+        <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Email</h2>
+        <InputField type="email" value={currentEmail} disabled placeholder="Current Email" />
+        <InputField type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="New Email" error={errors.newEmail} />
+        <InputField type="email" value={confirmNewEmail} onChange={(e) => setConfirmNewEmail(e.target.value)} placeholder="Confirm New Email" error={errors.confirmNewEmail} />
+        <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdateEmail}>Update Email</Button>
 
-      {/* 🔹 Change Password */}
-      <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Password</h2>
-      <InputField type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="New Password" error={errors.newPassword} />
-      <InputField type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm New Password" error={errors.confirmPassword} />
-      <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdatePassword}>Update Password</Button>
+        <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Password</h2>
+        <InputField type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="New Password" error={errors.newPassword} />
+        <InputField type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm New Password" error={errors.confirmPassword} />
+        <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdatePassword}>Update Password</Button>
 
-      {/* 🔹 Delete Account */}
-      <div className="mt-8">
-        <Button variant="delete" className="w-full py-3" onClick={handleDeleteAccount}>Delete Account</Button>
+        <div className="mt-8">
+          <Button variant="delete" className="w-full py-3" onClick={handleDeleteAccount}>Delete Account</Button>
+        </div>
       </div>
-    </div>
 
-    {/* 🔹 Delete Account Modal */}
-    <Modal 
-      title="Delete Account" 
-      description="Are you sure you want to delete your account? This action cannot be undone." 
-      isOpen={isModalOpen} 
-      onConfirm={confirmDelete} 
-      onCancel={() => setIsModalOpen(false)} 
-    />
-  </div>
-  )
+      <Modal
+        title="Delete Account"
+        description="Are you sure you want to delete your account? This action cannot be undone."
+        isOpen={isModalOpen}
+        onConfirm={confirmDelete}
+        onCancel={() => setIsModalOpen(false)}
+      />
+    </div>
+  );
 };
 
 export default Profile;

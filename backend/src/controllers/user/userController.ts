@@ -21,14 +21,14 @@ export const getUserProfile = async (req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const user = await User.findById(req.user.id).select("_id name email"); // ✅ Explicitly select `_id`
+    const user = await User.findById(req.user.id).select("_id name email");
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
     res.json({
-      id: user._id.toString(), // ✅ Convert `_id` to string and return as `id`
+      id: user._id.toString(),
       name: user.name,
       email: user.email,
     });

@@ -14,11 +14,11 @@ interface AuthenticatedRequest extends Request {
 
 const router = express.Router();
 
-// ✅ Password reset routes
+// Password reset routes
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
-// ✅ Get user profile (protected route)
+// Get user profile (protected route)
 router.get(
   "/me",
   authMiddleware,
@@ -42,7 +42,7 @@ router.get(
   })
 );
 
-// ✅ Register new user
+// Register new user
 router.post(
   "/register",
   [
@@ -50,17 +50,17 @@ router.post(
     body("email").isEmail().withMessage("Invalid email"),
     body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters long"),
   ],
-  asyncHandler(registerUser) // Wraps the controller with `asyncHandler` to catch async errors
+  asyncHandler(registerUser) 
 );
 
-// ✅ Verify email code
+// Verify email code
 router.post("/verify-email", verifyEmailCode);
 
-// ✅ User login
+// User login
 router.post(
   "/login",
   asyncHandler(async (req, res) => {
-    await loginUser(req, res); // ✅ Ensures `await` is used before calling loginUser
+    await loginUser(req, res); 
   })
 );
 

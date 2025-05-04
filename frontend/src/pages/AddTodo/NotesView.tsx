@@ -31,7 +31,6 @@ const NotesView = ({ todos, onEdit, onDeleted }: Props) => {
   );
 
   const handleDelete = async (id: string) => {
-    console.log("🧨 Försöker radera:", id);
     try {
       const res = await fetch(`http://localhost:5000/api/todos/${id}`, {
         method: "DELETE",
@@ -41,8 +40,6 @@ const NotesView = ({ todos, onEdit, onDeleted }: Props) => {
       });
 
       if (!res.ok) throw new Error(await res.text());
-
-      console.log("✅ Raderad, uppdaterar vy");
       if (onDeleted) onDeleted();
     } catch (err) {
       console.error("❌ Delete-fel:", err);

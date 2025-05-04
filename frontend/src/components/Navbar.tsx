@@ -56,7 +56,7 @@ const Navbar = () => {
               <div className="hidden xl:flex items-center gap-4 text-white">
                 {isLoggedIn ? (
                   <>
-                    <span className="text-white text-base">Hello, {name}!</span>
+                    <span className="text-white text-base">Hey, {name}!</span>
                     <NavButton to="/profile" label="Profile" style="bg-primary" />
                     <button
                       onClick={handleLogout}
