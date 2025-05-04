@@ -14,14 +14,15 @@ export const getTasks = async (req: Request, res: Response) => {
 // Skapa en ny uppgift
 export const createTask = async (req: Request, res: Response) => {
     try {
-        const { title } = req.body;
-        const newTask = new Task({ title });
+        const { title, description, priority, dueDate, dueTime, category } = req.body;
+        const newTask = new Task({ title, description, priority, dueDate, dueTime, category });
         await newTask.save();
         res.json(newTask);
     } catch (error) {
         res.status(400).json({ message: 'Fel vid skapande av uppgift', error });
     }
 };
+
 
 // Uppdatera en uppgift
 export const updateTask = async (req: Request, res: Response) => {

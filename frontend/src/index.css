@@ -49,3 +49,50 @@
   .hover\:bg-rosebrown:hover { background-color: #fca5a5; }
   .hover\:bg-warmbeige:hover { background-color: #e5e7eb; }
 }
+
+
+
+/* Replaces Tailwind @apply with plain CSS */
+.rbc-calendar {
+  background-color: white;
+  color: black;
+}
+
+.rbc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.rbc-toolbar button {
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  margin: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151; /* text-gray-700 */
+}
+
+.rbc-toolbar button:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+.rbc-toolbar button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.rbc-event {
+  background-color: #3b82f6; /* bg-blue-500 */
+  color: white;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.rbc-off-range-bg {
+  background-color: #f3f4f6; /* bg-gray-100 */
+}
