@@ -5,21 +5,13 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/user/authRoutes";
 import { router as userRoutes } from "./routes/user/userRoutes";
 import { emailRoutes } from "./routes/task/emailRoutes";
-import profileRoutes from "./routes/user/profileRoutes"; // Kontrollera att denna import är rätt
+import profileRoutes from "./routes/user/profileRoutes"; 
 import taskRoutes from "./routes/task/taskRoutes";
 import categoryRoutes from "./routes/task/categoryRoutes";
-
 import path from "path";
 
-// 🚀 Försök ladda .env explicit
+
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
-
-console.log("🔍 EMAIL_USER:", process.env.EMAIL_USER);
-console.log("🔍 EMAIL_PASS:", process.env.EMAIL_PASS ? "**** (Lösenord dolt)" : "❌ MISSING!");
-
-
-
-console.log("✅ Använd JWT_SECRET:", process.env.JWT_SECRET);
 
 
 const app = express();
@@ -32,17 +24,12 @@ app.use(express.json());
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/user", userRoutes); // Använd default import här
-// Använd rätt route för API-anrop
-app.use("/api", emailRoutes); // Detta gör att `/api/send-email` fungerar
-// Starta servern
-app.use("/api/user", userRoutes); // Viktig koppling!
-app.use("/api/auth", authRoutes); // 👈 Här läggs `/api/` till
+app.use("/user", userRoutes); 
+app.use("/api", emailRoutes); 
+app.use("/api/user", userRoutes); 
+app.use("/api/auth", authRoutes); 
 app.use("/api/todos", taskRoutes);
 app.use("/api/categories", categoryRoutes);
-
-
-// ✅ Använd rätt route-prefix
 app.use("/api/profile", profileRoutes);
 
 

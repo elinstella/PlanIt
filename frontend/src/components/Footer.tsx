@@ -1,5 +1,4 @@
 // components/Footer.tsx
-import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -12,11 +11,7 @@ const Footer = () => {
         </p>
 
         {/* Right: Nav links */}
-        <div className="flex gap-6">
-          <Link to="/about" className="hover:text-accent transition">About</Link>
-          <Link to="/dashboard" className="hover:text-accent transition">Dashboard</Link>
-          <Link to="/add-todo" className="hover:text-accent transition">Add Todo</Link>
-        </div>
+      
       </div>
     </footer>
   );

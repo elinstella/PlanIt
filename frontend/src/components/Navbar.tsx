@@ -34,14 +34,14 @@ const Navbar = () => {
 
               {/* Mobile Menu Toggle */}
               <button
-                className="lg:hidden text-white"
+                className="xl:hidden text-white"
                 onClick={() => setMenuOpen(!menuOpen)}
               >
                 {menuOpen ? <X size={32} /> : <Menu size={32} />}
               </button>
 
               {/* Desktop Navigation */}
-              <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-10 text-white font-semibold text-lg">
+              <div className="hidden xl:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-10 text-white font-semibold text-lg">
                 <NavLink to="/" label="Home" />
                 <NavLink to="/about" label="About Us" />
                 {isLoggedIn && (
@@ -53,7 +53,7 @@ const Navbar = () => {
               </div>
 
               {/* Right-side Desktop */}
-              <div className="hidden lg:flex items-center gap-4 text-white">
+              <div className="hidden xl:flex items-center gap-4 text-white">
                 {isLoggedIn ? (
                   <>
                     <span className="text-white text-base">Hello, {name}!</span>
@@ -76,7 +76,7 @@ const Navbar = () => {
 
             {/* Mobile Dropdown */}
             {menuOpen && (
-              <div className="lg:hidden mt-4 flex flex-col items-end text-right gap-4 text-white font-medium px-6 animate-fade-in">
+              <div className="xl:hidden mt-4 flex flex-col items-end text-right gap-4 text-white font-medium px-6 animate-fade-in">
                 <MobileLink to="/" label="Home" onClick={() => setMenuOpen(false)} />
                 <MobileLink to="/about" label="About Us" onClick={() => setMenuOpen(false)} />
                 {isLoggedIn && (
@@ -108,7 +108,7 @@ const Navbar = () => {
   );
 };
 
-// Reusable link component for desktop
+// Reusable nav links for desktop
 const NavLink = ({ to, label }: { to: string; label: string }) => (
   <Link
     to={to}
@@ -118,7 +118,7 @@ const NavLink = ({ to, label }: { to: string; label: string }) => (
   </Link>
 );
 
-// Reusable link for mobile
+// Reusable nav links for mobile with hover
 const MobileLink = ({
   to,
   label,
@@ -137,7 +137,7 @@ const MobileLink = ({
   </Link>
 );
 
-// Button style link
+// Button-like link
 const NavButton = ({
   to,
   label,
