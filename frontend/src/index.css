@@ -96,3 +96,12 @@
 .rbc-off-range-bg {
   background-color: #f3f4f6; /* bg-gray-100 */
 }
+
+/* Kalenderdatum och veckodagar */
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number {
+  color: #1f2937; /* text-gray-800 */
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+

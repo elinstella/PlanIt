@@ -1,3 +1,4 @@
+// Fully working AddTodo component with category CRUD, time format toggle, and preserved notes list
 import { useEffect, useState } from "react";
 import Button from "../components/UI/Button";
 import DatePicker from "react-datepicker";
@@ -16,14 +17,13 @@ type Todo = {
   completed?: boolean;
 };
 
-// Standardformulärdata (utan _id)
 const defaultForm: Omit<Todo, "_id"> = {
   title: "",
   description: "",
-  priority: "Medium",
+  priority: "",
   dueDate: "",
   dueTime: "",
-  category: "General",
+  category: "",
   location: "",
 };
 
@@ -35,9 +35,16 @@ const AddTodo = () => {
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+  const [use12Hour, setUse12Hour] = useState(false);
+
+  const [categories, setCategories] = useState<string[]>([]);
+  const [newCategory, setNewCategory] = useState("");
+  const [editingCategory, setEditingCategory] = useState<string | null>(null);
+  const [categoryEditValue, setCategoryEditValue] = useState("");
 
   useEffect(() => {
     fetchTodos();
+    fetchCategories();
   }, []);
 
   const fetchTodos = async () => {
@@ -50,9 +57,75 @@ const AddTodo = () => {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/categories", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      const data = await res.json();
+      setCategories(data.categories);
+    } catch (error) {
+      console.error("Failed to load categories", error);
+    }
+  };
+
+  const handleAddCategory = async () => {
+    if (!newCategory.trim()) return;
+    try {
+      const res = await fetch("http://localhost:5000/api/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ category: newCategory }),
+      });
+      const data = await res.json();
+      setCategories(data.categories);
+      setNewCategory("");
+    } catch (err) {
+      console.error("Could not add category", err);
+    }
+  };
+
+  const handleDeleteCategory = async (cat: string) => {
+    try {
+      const res = await fetch("http://localhost:5000/api/categories", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ category: cat }),
+      });
+      const data = await res.json();
+      setCategories(data.categories);
+    } catch (err) {
+      console.error("Could not delete category", err);
+    }
+  };
+
+  const handleUpdateCategory = async () => {
+    if (!editingCategory || !categoryEditValue.trim()) return;
+    try {
+      const res = await fetch("http://localhost:5000/api/categories", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ oldCategory: editingCategory, newCategory: categoryEditValue }),
+      });
+      const data = await res.json();
+      setCategories(data.categories);
+      setEditingCategory(null);
+      setCategoryEditValue("");
+    } catch (err) {
+      console.error("Could not update category", err);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -69,9 +142,7 @@ const AddTodo = () => {
     const finalForm = {
       ...form,
       dueDate: selectedDate ? selectedDate.toISOString().split("T")[0] : "",
-      dueTime: selectedTime
-        ? selectedTime.toTimeString().split(" ")[0].slice(0, 5)
-        : "",
+      dueTime: selectedTime ? selectedTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: use12Hour }) : "",
     };
 
     try {
@@ -116,16 +187,16 @@ const AddTodo = () => {
     setForm({
       title: todo.title,
       description: todo.description || "",
-      priority: todo.priority || "Medium",
+      priority: todo.priority || "",
       dueDate: todo.dueDate || "",
       dueTime: todo.dueTime || "",
-      category: todo.category || "General",
+      category: todo.category || "",
       location: todo.location || "",
     });
 
     setSelectedDate(todo.dueDate ? new Date(todo.dueDate) : null);
     if (todo.dueTime) {
-      const [h, m] = todo.dueTime.split(":");
+      const [h, m] = todo.dueTime.includes("AM") || todo.dueTime.includes("PM") ? todo.dueTime.split(/[: ]/) : todo.dueTime.split(":");
       const d = new Date();
       d.setHours(Number(h), Number(m));
       setSelectedTime(d);
@@ -138,82 +209,68 @@ const AddTodo = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-neutral px-4 py-16">
-      {/* Formulär */}
       <div className="bg-dark p-10 rounded-lg shadow-lg w-full max-w-xl text-left">
         <h2 className="text-3xl font-bold text-mutedlilac mb-6">
           {editingId ? "Update Todo" : "Add New Todo"}
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <input
-            type="text"
-            name="title"
-            placeholder="Title *"
-            value={form.title}
-            onChange={handleChange}
-            className="px-4 py-3 rounded-md bg-neutral text-dark placeholder:text-bluegray"
-          />
+          <input type="text" name="title" placeholder="Title *" value={form.title} onChange={handleChange} className="px-4 py-3 rounded-md bg-neutral text-dark placeholder:text-bluegray" />
 
-          <textarea
-            name="description"
-            placeholder="Description (optional)"
-            value={form.description}
-            onChange={handleChange}
-            className="px-4 py-3 rounded-md bg-neutral text-dark placeholder:text-bluegray"
-          />
+          <textarea name="description" placeholder="Description (optional)" value={form.description} onChange={handleChange} className="px-4 py-3 rounded-md bg-neutral text-dark placeholder:text-bluegray" />
 
-          <input
-            type="text"
-            name="location"
-            placeholder="Location"
-            value={form.location}
-            onChange={handleChange}
-            className="px-4 py-3 rounded-md bg-neutral text-dark placeholder:text-bluegray"
-          />
+          <input type="text" name="location" placeholder="Location" value={form.location} onChange={handleChange} className="px-4 py-3 rounded-md bg-neutral text-dark placeholder:text-bluegray" />
 
-          <select
-            name="priority"
-            value={form.priority}
-            onChange={handleChange}
-            className="px-4 py-3 rounded-md bg-neutral text-dark"
-          >
+          <select name="priority" value={form.priority} onChange={handleChange} className="px-4 py-3 rounded-md bg-neutral text-dark">
+            <option value="">Choose priority</option>
             <option value="Low">Low</option>
             <option value="Medium">Medium</option>
             <option value="High">High</option>
           </select>
 
-          <select
-            name="category"
-            value={form.category}
-            onChange={handleChange}
-            className="px-4 py-3 rounded-md bg-neutral text-dark"
-          >
-            <option value="General">General</option>
-            <option value="Work">Work</option>
-            <option value="Personal">Personal</option>
-            <option value="Health">Health</option>
+          <select name="category" value={form.category} onChange={handleChange} className="px-4 py-3 rounded-md bg-neutral text-dark">
+            <option value="">Choose category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
           </select>
 
-          {/* Kalender och tid */}
-          <DatePicker
-            selected={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
-            placeholderText="Select due date"
-            className="px-4 py-3 rounded-md bg-neutral text-dark"
-            dateFormat="yyyy-MM-dd"
-          />
+          <div className="flex gap-2">
+            <input type="text" placeholder="Add new category" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} className="px-4 py-2 rounded-md bg-neutral text-dark placeholder:text-bluegray flex-1" />
+            <Button type="button" variant="update" onClick={handleAddCategory}>Add</Button>
+          </div>
 
-          <DatePicker
-            selected={selectedTime}
-            onChange={(time) => setSelectedTime(time)}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={30}
-            timeCaption="Time"
-            dateFormat="HH:mm"
-            placeholderText="Select due time"
-            className="px-4 py-3 rounded-md bg-neutral text-dark"
-          />
+          <ul className="mt-3 space-y-2">
+            {categories.map((cat) => (
+              <li key={cat} className="flex justify-between items-center text-sm text-mutedlilac">
+                {editingCategory === cat ? (
+                  <>
+                    <input value={categoryEditValue} onChange={(e) => setCategoryEditValue(e.target.value)} className="bg-neutral text-dark px-2 py-1 rounded mr-2" />
+                    <button type="button" onClick={handleUpdateCategory} className="text-green-500 hover:underline text-xs mr-1">Save</button>
+                    <button type="button" onClick={() => setEditingCategory(null)} className="text-gray-300 hover:underline text-xs">Cancel</button>
+                  </>
+                ) : (
+                  <>
+                    <span>{cat}</span>
+                    <div className="flex gap-2">
+                      <button type="button" onClick={() => { setEditingCategory(cat); setCategoryEditValue(cat); }} className="text-blue-400 hover:underline text-xs">Edit</button>
+                      <button type="button" onClick={() => handleDeleteCategory(cat)} className="text-red-400 hover:underline text-xs">Delete</button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} placeholderText="Select due date" className="px-4 py-3 rounded-md bg-neutral text-dark" dateFormat="yyyy-MM-dd" />
+
+          <div>
+            <DatePicker selected={selectedTime} onChange={(time) => setSelectedTime(time)} showTimeSelect showTimeSelectOnly timeIntervals={30} timeCaption="Time" dateFormat={use12Hour ? "hh:mm aa" : "HH:mm"} timeFormat={use12Hour ? "hh:mm aa" : "HH:mm"} placeholderText="Select due time" className="px-4 py-3 rounded-md bg-neutral text-dark" />
+            <label className="flex items-center gap-2 mt-2 text-sm text-mutedlilac">
+              <input type="checkbox" checked={use12Hour} onChange={() => setUse12Hour(!use12Hour)} />
+              Use 12-hour format (AM/PM)
+            </label>
+          </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
@@ -240,22 +297,12 @@ const AddTodo = () => {
                       <p className="text-sm text-bluegray italic">📍 {todo.location}</p>
                     )}
                     <p className="text-sm text-gray-500">
-                      {todo.dueDate} at {todo.dueTime} • {todo.category} • {todo.priority}
+                      {todo.dueDate} at {todo.dueTime} • {todo.category || "General"} • {todo.priority || "None"}
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEdit(todo)}
-                      className="text-sm text-blue-500 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(todo._id)}
-                      className="text-sm text-red-500 hover:underline"
-                    >
-                      Delete
-                    </button>
+                    <button onClick={() => handleEdit(todo)} className="text-sm text-blue-500 hover:underline">Edit</button>
+                    <button onClick={() => handleDelete(todo._id)} className="text-sm text-red-500 hover:underline">Delete</button>
                   </div>
                 </div>
               </li>

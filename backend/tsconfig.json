@@ -1,12 +1,12 @@
 {
-    "compilerOptions": {
-      "target": "ES6",
-      "module": "CommonJS",
-      "rootDir": "./src",
-      "outDir": "./dist",
-      "strict": true,
-      "esModuleInterop": true
-    },
-    "exclude": ["node_modules"]
-  }
-  
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"] 
+  },
+  "exclude": ["node_modules"]
+}

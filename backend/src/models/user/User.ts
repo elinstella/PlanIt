@@ -8,6 +8,7 @@ interface IUser extends Document {
   email: string;
   password: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
+  categories: string[]; 
 }
 
 // Define Mongoose Schema for User
@@ -15,6 +16,8 @@ const UserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  categories: { type: [String], default: [] },
+
 });
 
 // ✅ Ensure `_id` is always included as `id` in JSON responses
