@@ -3,11 +3,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// Create a transporter object using the Gmail service with credentials from environment variables
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // Din Gmail-adress
-    pass: process.env.EMAIL_PASS, // App-lösenordet från Gmail
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS,
   },
 });
 

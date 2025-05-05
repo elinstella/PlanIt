@@ -10,14 +10,17 @@ import taskRoutes from "./routes/task/taskRoutes";
 import categoryRoutes from "./routes/task/categoryRoutes";
 import path from "path";
 
-
+// Loading environment variables from the .env file using path resolution
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 
 const app = express();
 
+
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI as string;
+
+// Middleware
 
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
@@ -36,7 +39,7 @@ app.use("/api/profile", profileRoutes);
 mongoose
   .connect(MONGO_URI)
   .then(() => {
-    console.log("✅ Ansluten till MongoDB");
-    app.listen(PORT, () => console.log(`🚀 Servern körs på http://localhost:${PORT}`));
+    console.log("✅ Connected to MongoDB");
+    app.listen(PORT, () => console.log(`🚀 Server is running at http://localhost:${PORT}`));
   })
-  .catch((err) => console.error("❌ MongoDB-fel:", err));
+  .catch((err) => console.error("❌ MongoDB error:", err));

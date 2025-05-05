@@ -1,33 +1,29 @@
 import { Request, Response } from 'express';
 import { Task } from '../../models/task/Task';
 
-// Hämta alla aktiva uppgifter
+// Get all active tasks
 export const getTasks = async (req: Request, res: Response) => {
   try {
     const tasks = await Task.find({ deleted: false });
     res.json(tasks);
   } catch (error) {
-    res.status(500).json({ message: 'Serverfel', error });
+    res.status(500).json({ message: 'Server error', error });
   }
 };
 
-// Hämta uppgifter i papperskorgen
+// Get tasks in the trash (soft-deleted)
 export const getTrashedTasks = async (req: Request, res: Response) => {
   try {
     const tasks = await Task.find({ deleted: true });
     res.json(tasks);
   } catch (error) {
-    res.status(500).json({ message: 'Serverfel vid hämtning av papperskorg', error });
+    res.status(500).json({ message: 'Server error while fetching trash', error });
   }
 };
 
-// Skapa en ny uppgift
+// Create a new task
 export const createTask = async (req: Request, res: Response) => {
   try {
-
-
-    console.log("📨 Mottaget från frontend:", req.body); // 👈 Lägg till här
-
     const {
       title,
       description,
@@ -36,7 +32,7 @@ export const createTask = async (req: Request, res: Response) => {
       dueTime,
       category,
       location,
-      note, // ✅ Lagt till notering
+      note, 
     } = req.body;
 
     const newTask = new Task({
@@ -47,24 +43,21 @@ export const createTask = async (req: Request, res: Response) => {
       dueTime,
       category,
       location,
-      note, // ✅ Sparas nu
+      note, 
     });
-
-    console.log("🧾 Uppgift som sparas:", newTask); // 👈 Lägg till här
 
 
     await newTask.save();
     res.json(newTask);
   } catch (error) {
-    res.status(400).json({ message: 'Fel vid skapande av uppgift', error });
+    res.status(400).json({ message: 'Error creating task', error });
   }
 };
 
-// Uppdatera en uppgift
+// Update a task
 export const updateTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-
     const updatedTask = await Task.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
@@ -72,11 +65,11 @@ export const updateTask = async (req: Request, res: Response) => {
 
     res.json(updatedTask);
   } catch (error) {
-    res.status(400).json({ message: 'Fel vid uppdatering', error });
+    res.status(400).json({ message: 'Error updating task', error });
   }
 };
 
-// Flytta till papperskorg (soft delete)
+// Move task to trash (soft delete)
 export const deleteTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -84,40 +77,40 @@ export const deleteTask = async (req: Request, res: Response) => {
       deleted: true,
       deletedAt: new Date(),
     });
-    res.json({ message: 'Flyttad till papperskorgen' });
+    res.json({ message: 'Moved to trash' });
   } catch (error) {
-    res.status(400).json({ message: 'Fel vid radering', error });
+    res.status(400).json({ message: 'Error deleting task', error });
   }
 };
 
-// Återställ från papperskorgen
+// Restore task from trash
 export const restoreTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const restored = await Task.findByIdAndUpdate(id, { deleted: false }, { new: true });
     res.json(restored);
   } catch (error) {
-    res.status(400).json({ message: 'Kunde inte återställa uppgift', error });
+    res.status(400).json({ message: 'Could not restore task', error });
   }
 };
 
-// Permanent radera från DB
+// Permanently delete task from DB
 export const deleteTaskPermanently = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     await Task.findByIdAndDelete(id);
-    res.json({ message: 'Uppgift permanent borttagen' });
+    res.json({ message: 'Task permanently deleted' });
   } catch (error) {
-    res.status(400).json({ message: 'Kunde inte ta bort uppgiften permanent', error });
+    res.status(400).json({ message: 'Could not permanently delete task', error });
   }
 };
 
-// Töm hela papperskorgen
+// Empty the entire trash
 export const emptyTrash = async (_: Request, res: Response) => {
   try {
     await Task.deleteMany({ deleted: true });
-    res.json({ message: 'Papperskorgen tömd' });
+    res.json({ message: 'Trash emptied' });
   } catch (error) {
-    res.status(500).json({ message: 'Kunde inte tömma papperskorgen', error });
+    res.status(500).json({ message: 'Could not empty the trash', error });
   }
 };
