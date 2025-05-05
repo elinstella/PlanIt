@@ -93,7 +93,7 @@ To start backend, run the following command:
 
 ```bash
 cd backend
-npm run build
+npm run dev
 ```
 
 
