@@ -88,8 +88,8 @@ FRONTEND_URL="http://localhost:5173"
 
 For a production environment, make sure both the backend and frontend are built and deployed correctly.
 
-### Build the Backend
-To prepare the backend for production, run the following command:
+### Start the Backend
+To start backend, run the following command:
 
 ```bash
 cd backend
