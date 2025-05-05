@@ -1,7 +1,10 @@
 # PlanIt
 PlanIt
+##
 ![PlanIt screenshot](Presentation/1.png)
+##
 ![PlanIt screenshot](Presentation/2.png)
+##
 ![PlanIt screenshot](Presentation/3.png)
 
 
