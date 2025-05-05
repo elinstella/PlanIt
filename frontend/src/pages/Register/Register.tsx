@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import InputField from "../components/UI/InputField"; // ✅ Import InputField
-import VerifyEmail from "../components/api/VerifyEmail";
+import InputField from "../../components/UI/InputField"
+import VerifyEmail from "../../components/api/VerifyEmail";
+import TermsModal from "./TermsModal"; // Import the TermsModal component
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -10,6 +11,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [resendMessage, setResendMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal open state
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -60,6 +62,9 @@ const Register = () => {
     }
   };
 
+  const openTermsModal = () => setIsModalOpen(true);
+  const closeTermsModal = () => setIsModalOpen(false);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-neutral px-4">
       {/* 🔹 Registration Box */}
@@ -103,6 +108,14 @@ const Register = () => {
                 Login here
               </Link>
             </p>
+
+            {/* 🔹 Terms Link */}
+            <p className="text-sm text-warmbeige mt-2">
+              By registering, you agree to our{" "}
+              <button onClick={openTermsModal} className="text-primary-light hover:underline">
+                Terms of Service
+              </button>.
+            </p>
           </form>
         ) : (
           /* 🔹 Step 2: Verification Message */
@@ -121,6 +134,9 @@ const Register = () => {
           </div>
         )}
       </div>
+
+      {/* 🔹 Terms Modal */}
+      <TermsModal isOpen={isModalOpen} onClose={closeTermsModal} />
     </div>
   );
 };

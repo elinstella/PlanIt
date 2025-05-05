@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import CreateTask from "./AddTodo/CreateTask";
-import NotesView, { Todo } from "./AddTodo/NotesView";
-import TrashView from "./AddTodo/TrashView";
+import CreateTask from "./CreateTask";
+import NotesView, { Todo } from "./NotesView";
+import TrashView from "./TrashView";
 
 const AddTodo = () => {
   const [todos, setTodos] = useState<Todo[]>([]);

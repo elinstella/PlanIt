@@ -37,7 +37,7 @@ const EmailSender = () => {
   };
 
   return (
-    <div className="h-auto flex items-center justify-center p-6 mt-4"> {/* Minskat avstånd från andra komponenter */}
+    <div className="h-auto flex items-center justify-center p-6 mt-1 mb-3"> {/* Minskat avstånd från andra komponenter */}
       {/* 🔹 Email Sender Box with bg-dark background */}
       <div className="bg-dark p-16 rounded-lg shadow-lg w-full max-w-3xl text-center"> {/* Changed background color */}
         <h1 className="text-3xl text-white font-bold mb-6">Subscribe for Updates</h1> {/* White text color for better contrast */}
