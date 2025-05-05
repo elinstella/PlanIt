@@ -37,36 +37,33 @@ const EmailSender = () => {
   };
 
   return (
-    <div className="h-auto min-h-[400px] flex items-center justify-center bg-background p-6 my-10">
+    <div className="h-auto flex items-center justify-center p-6 mt-4"> {/* Minskat avstånd från andra komponenter */}
+      {/* 🔹 Email Sender Box with bg-dark background */}
+      <div className="bg-dark p-16 rounded-lg shadow-lg w-full max-w-3xl text-center"> {/* Changed background color */}
+        <h1 className="text-3xl text-white font-bold mb-6">Subscribe for Updates</h1> {/* White text color for better contrast */}
 
-    {/* 🔹 Email Sender Box */}
-    <div className="bg-dark p-15 rounded-lg shadow-lg w-full max-w-lg text-center">
-  
-      <h1 className="text-3xl text-bluegray font-bold mb-6">Subscribe for Updates</h1> {/* 🔹 Title inside the box */}
-  
-      <form className="flex flex-col gap-5">
-        <InputField
-          type="email"
-          value={email}
-          placeholder="Enter your email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-  
-        <Button variant="confirm" className="w-full py-3" onClick={sendEmail}>
-          Send Email
-        </Button>
-  
-        {isSent && (
-          <Button variant="update" className="w-full py-3" onClick={sendEmail}>
-            Resend Email
+        <form className="flex flex-col gap-5">
+          <InputField
+            type="email"
+            value={email}
+            placeholder="Enter your email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <Button variant="confirm" className="w-full py-3" onClick={sendEmail}>
+            Send Email
           </Button>
-        )}
-  
-        {message && <p className="text-mutedlilac text-sm mt-2">{message}</p>}
-      </form>
+
+          {isSent && (
+            <Button variant="update" className="w-full py-3" onClick={sendEmail}>
+              Resend Email
+            </Button>
+          )}
+
+          {message && <p className="text-white text-sm mt-2">{message}</p>} {/* White text for the message */}
+        </form>
+      </div>
     </div>
-  </div>
-  
   );
 };
 

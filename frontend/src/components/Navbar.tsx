@@ -19,15 +19,15 @@ const Navbar = () => {
   };
 
   return (
-    <div className="sticky top-0 z-50">
-      <div className="rounded-b-3xl">
+<div className="sticky top-0 z-50 bg-neutral">
+    <div className="rounded-b-3xl">
         <div className="shadow-lg shadow-gray-500/30 rounded-b-3xl">
           <nav className="navbar-gradient rounded-b-3xl overflow-hidden py-5 px-6 md:px-12 relative">
             <div className="container max-w-screen-xl mx-auto flex items-center justify-between">
               {/* Logo */}
               <Link
                 to="/"
-                className="text-[28px] font-extrabold tracking-wide text-dark transition-transform duration-300 hover:scale-105"
+                className="text-[40px] font-extrabold tracking-wide text-dark transition-transform duration-300 hover:scale-105"
               >
                 PlanIt
               </Link>

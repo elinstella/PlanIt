@@ -18,7 +18,7 @@
   .bg-secondary { background-color: #06b6d4; }
   .bg-accent { background-color: #f59e0b; }
   .bg-neutral { background-color: #e5e7eb; }
-  .bg-mutedlilac { background-color: #ddd6fe; }
+  .bg-mutedlilac { background-color: #b8ade9; }
   .bg-softlilac { background-color: #ede9fe; }
   .bg-rosebrown { background-color: #fef2f2; }
   .bg-warmbeige { background-color: #f3f4f6; }
@@ -31,10 +31,10 @@
   .text-secondary { color: #06b6d4; }
   .text-accent { color: #f59e0b; }
   .text-neutral { color: #374151; font-weight: 500; line-height: 1.75; }
-  .text-mutedlilac { color: #c4b5fd; }
+  .text-mutedlilac { color: #b9aaea; }
   .text-softlilac { color: #d8b4fe; }
   .text-rosebrown { color: #fecaca; }
-  .text-warmbeige { color: #afbdd3; }
+  .text-warmbeige { color: #e4e8f1; }
   .text-bluegray { color: #b8c5d7; }
   
   .text-button { color: #f9fafb; }

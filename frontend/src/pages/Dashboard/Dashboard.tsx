@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import FilterBar from "./FilterBar";
 import TodoGrid from "./TodoGrid";
 import CalendarView from "./CalendarView";
-
+import CreateTask from "../AddTodo/CreateTask";
 
 export type Todo = {
   _id: string;
@@ -21,8 +21,10 @@ const Dashboard = () => {
   const [filtered, setFiltered] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<string>("All");
   const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Completed">("All");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [dateFilter, setDateFilter] = useState<"All" | "HasDate" | "NoDate">("All");
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
 
-  // 🔁 Hämta todos från backend
   const fetchTodos = async () => {
     const res = await fetch("http://localhost:5000/api/todos");
     const data = await res.json();
@@ -33,7 +35,6 @@ const Dashboard = () => {
     fetchTodos();
   }, []);
 
-  // 🧠 Filtrering baserat på kategori + status
   useEffect(() => {
     let result = [...todos];
 
@@ -47,10 +48,23 @@ const Dashboard = () => {
       result = result.filter((todo) => !todo.completed);
     }
 
-    setFiltered(result);
-  }, [todos, filter, statusFilter]);
+    if (dateFilter === "HasDate") {
+      result = result.filter((todo) => !!todo.dueDate);
+    } else if (dateFilter === "NoDate") {
+      result = result.filter((todo) => !todo.dueDate);
+    }
 
-  // ✅ Markera som klar/ej klar
+    result.sort((a, b) => {
+      const timeA = a.dueTime?.split(" - ")[0] || "";
+      const timeB = b.dueTime?.split(" - ")[0] || "";
+      return sortOrder === "asc"
+        ? timeA.localeCompare(timeB)
+        : timeB.localeCompare(timeA);
+    });
+
+    setFiltered(result);
+  }, [todos, filter, statusFilter, sortOrder, dateFilter]);
+
   const handleToggle = async (id: string, done: boolean) => {
     try {
       await fetch(`http://localhost:5000/api/todos/${id}`, {
@@ -64,7 +78,6 @@ const Dashboard = () => {
     }
   };
 
-  // ❌ Radera todo
   const handleDelete = async (id: string) => {
     try {
       await fetch(`http://localhost:5000/api/todos/${id}`, {
@@ -81,10 +94,15 @@ const Dashboard = () => {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-6 text-mutedlilac">Dashboard</h1>
 
-        {/* Kategori-filter */}
-        <FilterBar setFilter={setFilter} current={filter} />
+        <FilterBar
+          setFilter={setFilter}
+          current={filter}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          dateFilter={dateFilter}
+          setDateFilter={setDateFilter}
+        />
 
-        {/* Status-filter */}
         <div className="flex gap-3 mb-6">
           {["All", "Active", "Completed"].map((status) => (
             <button
@@ -101,13 +119,34 @@ const Dashboard = () => {
           ))}
         </div>
 
-        <TodoGrid
-          todos={filtered}
-          onToggle={handleToggle}
-          onDelete={handleDelete}
-        />
-        <CalendarView todos={filtered} />
+        <div className="mb-12">
+          <TodoGrid todos={filtered} onToggle={handleToggle} onDelete={handleDelete} />
+        </div>
 
+        <CalendarView todos={filtered} onEdit={setEditingTodo} />
+
+        {editingTodo && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[9999]">
+            <div className="bg-white p-6 rounded-lg max-w-lg w-full shadow-lg">
+              <CreateTask
+                editingTodo={editingTodo}
+                onSaved={() => {
+                  setEditingTodo(null);
+                  fetchTodos();
+                }}
+                clearEditing={() => setEditingTodo(null)}
+              />
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={() => setEditingTodo(null)}
+                  className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 text-black"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

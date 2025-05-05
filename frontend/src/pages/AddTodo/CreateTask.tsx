@@ -59,7 +59,10 @@ const CreateTask = forwardRef<HTMLFormElement, Props>(
           location: editingTodo.location || "",
         });
 
-        if (editingTodo.dueDate) setSelectedDate(new Date(editingTodo.dueDate));
+        if (editingTodo.dueDate) {
+          setSelectedDate(new Date(editingTodo.dueDate));
+        }
+
         if (editingTodo.dueTime) {
           const [start, end] = editingTodo.dueTime.split(" - ");
           const s = new Date();
@@ -203,9 +206,9 @@ const CreateTask = forwardRef<HTMLFormElement, Props>(
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 bg-dark p-6 rounded-lg w-full max-w-xl"
       >
-        <h2 className="text-xl font-bold text-white mb-2">
+         <h3 className="text-xl font-semibold text-mutedlilac mb-1">
           {editingTodo ? "Edit Todo" : "Add New Todo"}
-        </h2>
+        </h3>
 
         <input
           type="text"
@@ -230,7 +233,6 @@ const CreateTask = forwardRef<HTMLFormElement, Props>(
           onChange={handleChange}
           className="px-4 py-2 rounded bg-neutral text-dark"
         />
-
         <select
           name="priority"
           value={form.priority}
@@ -242,7 +244,6 @@ const CreateTask = forwardRef<HTMLFormElement, Props>(
           <option value="Medium">Medium</option>
           <option value="High">High</option>
         </select>
-
         <select
           name="category"
           value={form.category}

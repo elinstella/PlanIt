@@ -8,18 +8,21 @@ type Props = {
 };
 
 const TodoGrid = ({ todos, onToggle, onDelete }: Props) => {
-  if (todos.length === 0)
-    return <p className="text-bluegray">No todos to display.</p>;
-
   return (
-    <div className="overflow-x-auto">
-      <div className="grid grid-rows-2 auto-cols-[320px] gap-4 w-max max-w-full overflow-x-auto grid-flow-col py-4">
-        {todos.map((todo) => (
-          <div key={todo._id} className="h-[220px]">
-            <TodoCard todo={todo} onToggle={onToggle} onDelete={onDelete} />
+    <div className="w-full mb-8">
+      {todos.length === 0 ? (
+        <p className="text-bluegray text-center">No todos to display.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <div className="grid grid-rows-2 auto-cols-[320px] gap-4 w-max max-w-full overflow-x-auto grid-flow-col py-4">
+            {todos.map((todo) => (
+              <div key={todo._id} className="h-[220px]">
+                <TodoCard todo={todo} onToggle={onToggle} onDelete={onDelete} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

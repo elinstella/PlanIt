@@ -24,8 +24,35 @@ export const getTrashedTasks = async (req: Request, res: Response) => {
 // Skapa en ny uppgift
 export const createTask = async (req: Request, res: Response) => {
   try {
-    const { title, description, priority, dueDate, dueTime, category, location } = req.body;
-    const newTask = new Task({ title, description, priority, dueDate, dueTime, category, location });
+
+
+    console.log("📨 Mottaget från frontend:", req.body); // 👈 Lägg till här
+
+    const {
+      title,
+      description,
+      priority,
+      dueDate,
+      dueTime,
+      category,
+      location,
+      note, // ✅ Lagt till notering
+    } = req.body;
+
+    const newTask = new Task({
+      title,
+      description,
+      priority,
+      dueDate,
+      dueTime,
+      category,
+      location,
+      note, // ✅ Sparas nu
+    });
+
+    console.log("🧾 Uppgift som sparas:", newTask); // 👈 Lägg till här
+
+
     await newTask.save();
     res.json(newTask);
   } catch (error) {
@@ -37,7 +64,12 @@ export const createTask = async (req: Request, res: Response) => {
 export const updateTask = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const updatedTask = await Task.findByIdAndUpdate(id, req.body, { new: true });
+
+    const updatedTask = await Task.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
     res.json(updatedTask);
   } catch (error) {
     res.status(400).json({ message: 'Fel vid uppdatering', error });
@@ -57,7 +89,6 @@ export const deleteTask = async (req: Request, res: Response) => {
     res.status(400).json({ message: 'Fel vid radering', error });
   }
 };
-
 
 // Återställ från papperskorgen
 export const restoreTask = async (req: Request, res: Response) => {
@@ -81,8 +112,8 @@ export const deleteTaskPermanently = async (req: Request, res: Response) => {
   }
 };
 
-// Töm hela papperskorgen (permanent radering av alla soft-deleted uppgifter)
-export const emptyTrash = async (req: Request, res: Response) => {
+// Töm hela papperskorgen
+export const emptyTrash = async (_: Request, res: Response) => {
   try {
     await Task.deleteMany({ deleted: true });
     res.json({ message: 'Papperskorgen tömd' });

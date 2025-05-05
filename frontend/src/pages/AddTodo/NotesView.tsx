@@ -10,6 +10,7 @@ export type Todo = {
   category?: string;
   location?: string;
   completed?: boolean;
+  note?: string;
 };
 
 interface Props {

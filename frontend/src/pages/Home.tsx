@@ -3,15 +3,16 @@ import EmailSender from "../components/api/send-email";
 
 const Home = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 py-12">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-neutral px-6 py-12">
+
       
       {/* 🔹 Hero Section */}
       <div className="text-center text-soft-beige max-w-3xl mt-16"> {/* Added more margin-top (mt-16 ≈ 64px) */}
         <h1 className="text-5xl font-extrabold text-primary mb-6">Welcome to PlanIt</h1>
-        <p className="text-lg text-warmbeige leading-relaxed">
-          PlanIt is a smart and intuitive task management app that helps you structure, prioritize, 
-          and complete your tasks with ease. Whether you work solo or in a team, PlanIt ensures a seamless 
-          experience to keep track of deadlines, reminders, and collaborations.
+        <p className="text-lg  text-dark  leading-relaxed">
+        PlanIt is a simple and powerful task management app designed to help you stay organized, prioritize, and complete your tasks with ease. 
+        Whether you're managing your personal to-dos or tracking deadlines, PlanIt ensures you stay on top of your schedule, never missing a deadline.
+        Streamline your workflow, stay focused, and manage your tasks efficiently.
         </p>
       </div>
 

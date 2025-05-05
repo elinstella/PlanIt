@@ -17,6 +17,7 @@ const AddTodo = () => {
         },
       });
       const data = await res.json();
+      console.log("✅ Fetched todos:", data);
       setTodos(data);
     } catch (err) {
       console.error("Error fetching todos:", err);
@@ -27,14 +28,19 @@ const AddTodo = () => {
     fetchTodos();
   }, []);
 
+  useEffect(() => {
+    if (editingTodo && formRef.current) {
+      formRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [editingTodo]);
+
   const forceRefresh = () => {
     setRefreshKey((prev) => prev + 1);
     fetchTodos();
   };
 
   const handleEdit = (todo: Todo) => {
-    setEditingTodo(todo);
-    formRef.current?.scrollIntoView({ behavior: "smooth" });
+    setEditingTodo(todo); // 👈 ingen scroll här längre
   };
 
   const handleRestore = async (id: string) => {
@@ -50,8 +56,6 @@ const AddTodo = () => {
       console.error("Error restoring todo:", err);
     }
   };
-
-
 
   const handleEmptyTrash = async () => {
     try {
@@ -75,7 +79,13 @@ const AddTodo = () => {
         editingTodo={editingTodo}
         clearEditing={() => setEditingTodo(null)}
       />
-      <NotesView todos={todos} onEdit={handleEdit} onDeleted={forceRefresh} />
+
+      <NotesView
+        todos={todos}
+        onEdit={handleEdit}
+        onDeleted={forceRefresh}
+      />
+
       <TrashView
         refreshKey={refreshKey}
         onRestore={handleRestore}

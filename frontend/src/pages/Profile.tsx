@@ -167,26 +167,26 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="bg-background min-h-screen flex items-center justify-center text-soft-beige p-6">
-      <div className="bg-dark p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
+    <div className="bg-neutral min-h-screen flex items-center justify-center text-soft-beige p-6">
+      <div className="bg-dark p-8 mt-10 mb-10 rounded-2xl shadow-xl w-full max-w-lg text-center">
         <h1 className="text-3xl font-bold text-primary mb-6">Profile Settings</h1>
 
         {alertType && <Alert message={alertMessage} type={alertType} onClose={() => setAlertType(null)} />}
 
-        <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Name</h2>
+        <h2 className="text-xl font-semibold text-mutedlilac mt-6 mb-2">Change Name</h2>
         <InputField value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name" error={errors.name} />
         <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdateName}>Update</Button>
 
-        <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Email</h2>
+        <h2 className="text-xl font-semibold text-mutedlilac mt-10 mb-2">Change Email</h2>
         <InputField type="email" value={currentEmail} disabled placeholder="Current Email" />
         <InputField type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="New Email" error={errors.newEmail} />
         <InputField type="email" value={confirmNewEmail} onChange={(e) => setConfirmNewEmail(e.target.value)} placeholder="Confirm New Email" error={errors.confirmNewEmail} />
         <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdateEmail}>Update Email</Button>
 
-        <h2 className="text-xl font-semibold text-mutedlilac mt-6">Change Password</h2>
+        <h2 className="text-xl font-semibold text-mutedlilac mt-10 mb-2">Change Password</h2>
         <InputField type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="New Password" error={errors.newPassword} />
         <InputField type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm New Password" error={errors.confirmPassword} />
-        <Button variant="update" className="mt-3 w-full py-3" onClick={handleUpdatePassword}>Update Password</Button>
+        <Button variant="update" className="mt-3 mb-8 w-full py-3" onClick={handleUpdatePassword}>Update Password</Button>
 
         <div className="mt-8">
           <Button variant="delete" className="w-full py-3" onClick={handleDeleteAccount}>Delete Account</Button>

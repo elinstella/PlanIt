@@ -37,7 +37,9 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       dispatch(setUser(data.user));
-      navigate("/profile");
+      
+      // Navigate to dashboard instead of profile
+      navigate("/dashboard");
     } catch {
       setError("Something went wrong. Please try again.");
     }
