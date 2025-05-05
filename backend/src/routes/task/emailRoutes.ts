@@ -3,6 +3,7 @@ import { sendEmail } from "../../services/task/emailService";
 
 const router = express.Router();
 
+// Route handler for sending an email
 router.post("/send-email", async (req: Request, res: Response): Promise<void> => {
   const { email } = req.body;
 

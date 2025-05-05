@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../../models/user/User";
 
+// Controller function to handle resetting a user's password
 export const resetPassword = async (req: Request, res: Response): Promise<void> => {
   try {
     const { token } = req.params;

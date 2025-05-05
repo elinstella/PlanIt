@@ -119,7 +119,8 @@ const Register = () => {
           </form>
         ) : (
           /* 🔹 Step 2: Verification Message */
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center justify-center min-h-screen bg-neutral px-4 mt-8">
+
             <p className="text-softlilac text-center">
               A mail has been sent for verification, check your inbox. If you haven't received it, you can resend the email below.
             </p>
