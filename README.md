@@ -1,6 +1,10 @@
 # PlanIt
 PlanIt
 ![PlanIt screenshot](Presentation/1.png)
+![PlanIt screenshot](Presentation/2.png)
+![PlanIt screenshot](Presentation/3.png)
+
+
 
 ## Overview
 This is a full-stack application designed to manage tasks and reminders. The app is built with **React (Vite)** on the frontend, **Node.js (Express)** on the backend, and **MongoDB** for data storage. It also uses **Tailwind CSS** for styling and **Redux Toolkit** for state management. The app allows users to sign up, log in, and manage their tasks.
