@@ -16,8 +16,13 @@ export const sendEmail = async (email: string): Promise<void> => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Ditt meddelande från vår app",
-    text: "Hej! Här kommer ett meddelande från vår app.",
+    subject: "Welcome to PlanIt – Your New To-Do App!",
+    text: `Hi there!
+
+Welcome to PlanIt – the smarter way to stay organized.
+With PlanIt, you can easily create, manage, and track your tasks all in one place. Whether it's daily chores or long-term goals, our app helps you stay focused and in control.
+
+You're now subscribed and ready to get started. Let’s make things happen – one task at a time!`,
   };
 
   await transporter.sendMail(mailOptions);
